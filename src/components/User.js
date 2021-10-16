@@ -9,21 +9,15 @@ function User(props){
     const getName = ()=>{
         setIsSelected(true);
         props.username(props.uName);
-        
-        
-       // props.isUserChecked(isSelected);
-        //props.userName(props.uName);
     }
     const unCheckName = ()=>{
         setIsSelected(false);
-        //props.isUserChecked(isSelected);
+        
     }
-
-    
-    
+   
     return(
         <StylesProvider injectFirst>
-            <ListItem button onClick={getName} onBlur={unCheckName} selected={isSelected} className=" w-full border-8 border-gray-200">
+            <ListItem button onClick={getName} onBlur={unCheckName} selected={isSelected} className=" w-full border-8 border-gray-200 text-gray-200 hover:bg-gray-500 focus:bg-gray-500">
                  <ListItemAvatar>
                      <Avatar src={props.pic}/>
                   </ListItemAvatar>

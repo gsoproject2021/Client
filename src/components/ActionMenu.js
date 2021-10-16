@@ -41,8 +41,6 @@ function ActionMenu(props){
         setEditField(event.target.value);
     }
 
-    
-
     const editRoom = (event)=>{
         event.preventDefault();
         props.updateRoom(editField);
@@ -52,19 +50,19 @@ function ActionMenu(props){
     return(
 
         <StylesProvider injectFirst>
-            <Box className="flex justify-between rounded-2xl bg-blue-100 border-2 border-blue-300 px-2 w-full ">
+            <Box className="flex justify-between  w-full ">
                 <Box>
-                    <Typography className="mt-2 " variant="h5">My Rooms</Typography>
+                    <Typography variant="h6" className="text-gray-100 mt-2 ml-3">My Rooms</Typography>
                 </Box>
-                <Box>
-                    <IconButton onClick={openAdd}>
-                        <GroupAdd/>
+                <Box >
+                    <IconButton onClick={openAdd} className="hover:bg-gray-400">
+                        <GroupAdd className="text-gray-100 "/>
                     </IconButton>
-                    <IconButton onClick={openEdit}>
-                        <Edit/>
+                    <IconButton onClick={openEdit} className="hover:bg-gray-400">
+                        <Edit className="text-gray-100"/>
                     </IconButton>
-                    <IconButton onClick={props.deleteRoom}>
-                        <DeleteForever/>
+                    <IconButton onClick={props.deleteRoom} className="hover:bg-gray-400">
+                        <DeleteForever className="text-gray-100"/>
                     </IconButton>
                 </Box>
             </Box>

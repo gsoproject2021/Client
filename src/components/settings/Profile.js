@@ -4,8 +4,8 @@ import { StylesProvider } from "@material-ui/styles";
 function Profile(props){
     return(
         <StylesProvider injectFirst>
-            <Paper className="mx-10 my-20">
-                <Typography align="center" variant="h4">User Details</Typography>
+            <Paper className="mx-10 my-10 py-2">
+                <Typography className="py-4" align="center" variant="h4">User Details</Typography>
                 <form>
                     <Grid container spacing={3} className="px-8">
                         <Grid item xs={12} sm={6} >
@@ -24,6 +24,9 @@ function Profile(props){
                                 </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={6}>
+                            <TextField type="datetime-local" variant="outlined" name="birthday"  fullWidth value={props.address}/>
+                        </Grid>
+                        <Grid item xs={12} >
                             <TextField variant="outlined" name="address" label="Address" fullWidth value={props.address}/>
                         </Grid>
                         <Grid item xs={12}>
@@ -40,6 +43,8 @@ function Profile(props){
                         </Grid>
                         <Grid item xs={12}>
                             <FormControlLabel control={<Checkbox   name="isadvertiser" />} label="Is advertiser?" />
+                            <FormControlLabel control={<Checkbox   name="blocked" />} label="Blocked" />
+                            <FormControlLabel control={<Checkbox   name="Admin" />} label="Admin" />
                         </Grid>
                         <Grid className="flex justify-center" item xs={12}>
                             <Button className="text-xl bg-blue-400 text-gray-100 hover:bg-blue-300 hover:text-gray-500" type="submit">Update detail</Button>

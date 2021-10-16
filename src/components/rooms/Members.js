@@ -1,9 +1,11 @@
 import {useState} from "react";
 import User from "../User";
 import AddUser from "./AddUser";
-import pic from '../../images/vitali.jpg';
-import { List, Paper, StylesProvider, Typography,Box, IconButton,TextField, Button,Dialog,DialogActions,DialogTitle } from "@material-ui/core";
-import {Delete, DeleteForever,PersonAdd} from "@material-ui/icons";
+import { List, Paper, StylesProvider, Typography,Box, IconButton, Button,Dialog,DialogActions,DialogTitle } from "@material-ui/core";
+import { DeleteForever,PersonAdd} from "@material-ui/icons";
+
+import { useSelector ,useDispatch} from "react-redux";
+import { roomsDataAction } from "../store/roomsData";
 
 const USERS = ["Vitali","Daniel","Eli"];
 
@@ -12,21 +14,15 @@ const ALLUSERS = ["Yossi","Haim","Yaakov","Pavel"];
 
 function Members(){
 
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
+    const dispatch = useDispatch(); 
+
     const [actionState,setActionState] = useState(false);
     const [addInput,setAddInput] = useState(false);
-    const [existedUsers,setExistedUsers] = useState(USERS);
+    
     const [newUsers,setNewUsers] = useState([]);
     const [userToDel,setUserToDel] = useState();
     
-    const userStatus = (status)=>{
-
-        if(status){
-            setActionState(false);
-        }
-        else
-            setActionState(true);
-    }
-
     const showAddUser = ()=>{
         setAddInput(true);
     }
@@ -36,7 +32,6 @@ function Members(){
     }
 
     const changeInputHandle = (event)=>{
-        console.log("changed");
         if(event.target.checked){
             
             setNewUsers(newUsers => [...newUsers,event.target.name]);
@@ -44,11 +39,10 @@ function Members(){
         else{
             setNewUsers(newUsers.filter(user => user!==event.target.name));
         }
-        console.log(newUsers);
     }
 
     const addNewUsers = ()=>{
-        setExistedUsers([...new Set(existedUsers.concat(newUsers))]);
+        dispatch(roomsDataAction.addMembers(newUsers))
         setNewUsers([]);
         setAddInput(false);
     }
@@ -60,7 +54,7 @@ function Members(){
     }
 
     const deleteUser = ()=>{
-        setExistedUsers(existedUsers.filter(user => user !== userToDel));
+        dispatch(roomsDataAction.removeMember(userToDel));
         setActionState(!actionState);
     }
 
@@ -75,18 +69,15 @@ function Members(){
 
     return(
         <StylesProvider injectFirst>
-            <Box className="flex flex-col justify-between h-96 rounded-2xl mx-2">
-                <Box className=" flex justify-between border-blue-300  mx-3 pl-2 my-2 bg-blue-100 border-2 rounded-2xl px-2 py-1"> 
-                    
-                      
-                                
-                    <Typography variant="h5" className="mt-1" >Members </Typography>
-                    <Box className=" mt-2">
-                        <IconButton onClick={showAddUser} size="small" disabled={actionState} >
-                            <PersonAdd/>
+            <Box className="flex flex-col justify-between h-full  ">
+                <Box className=" flex justify-between bg-gray-700 px-2">               
+                    <Typography variant="h6" className=" px-4 text-white py-4">Members</Typography>
+                    <Box className=" mt-4 space-x-2">
+                        <IconButton onClick={showAddUser} size="small" disabled={actionState} className="hover:bg-gray-400">
+                            <PersonAdd className="text-gray-100 "/>
                         </IconButton>
-                        <IconButton size="small" disabled={!actionState} onClick={deleteUser} >
-                            <DeleteForever/>
+                        <IconButton size="small" disabled={!actionState} onClick={deleteUser} className="hover:bg-gray-400">
+                            <DeleteForever className="text-gray-100 "/>
                         </IconButton>
                     </Box>
                     <Dialog open={addInput} onClose={hideAddRoom} className="" >
@@ -100,16 +91,13 @@ function Members(){
                                 <Button size="small" className="bg-green-500 hover:bg-green-200 text-white" onClick={addNewUsers} >Add</Button>
                                 <Button onClick={hideAddRoom} size="small" className="bg-red-500 hover:bg-red-200 text-white">Cancel</Button>
                             </DialogActions>
-                    </Dialog>
-
-                                
-                                
+                    </Dialog>        
                 </Box>   
-                <Paper className="border-2 border-gray-200 h-96 bg-blue-300 overflow-y-auto" >
-                    <List className="overflow-scroll border-2 border-t-0 shadow-inner mx-3 h-64 rounded bg-white my-4" >
-                        {existedUsers.map(existedUserList)}
+                <Box overflow="auto" className="px-2 space-y-2 overflow-y-auto h-96" >
+                    <List className=" space-y-2 overflow-y-auto" >
+                        {currentRoom.members.map(existedUserList)}
                     </List>
-                </Paper>
+                </Box>
             </Box>
         </StylesProvider>    
            

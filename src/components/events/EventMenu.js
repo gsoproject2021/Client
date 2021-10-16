@@ -2,15 +2,20 @@ import { Box,Dialog,DialogContent,DialogTitle,IconButton, TextField, Typography,
 import { StylesProvider } from "@material-ui/styles";
 import {EventBusy,EventNote, EventAvailable} from "@material-ui/icons";
 import { useState } from "react";
+import {useDispatch} from "react-redux";
+import { roomsDataAction } from "../../components/store/roomsData";
 
 
 function EventMenu(props){
+
+    const dispatch = useDispatch();
 
     const [add,setAdd] = useState(false);
     const [edit,setEdit] = useState(false);
     const [subject,setSubject] = useState('');
     const [date,setDate] =useState('');
     const [description,setDescription] = useState('');
+    const [prevSubject,setPrevSubject] = useState('');
 
 
     const getSubject = (event)=>{
@@ -25,13 +30,37 @@ function EventMenu(props){
         setDescription(event.target.value);
     }
 
-    const sendEventDetails = ()=>{  
-        props.eventData(subject,date,description);
+    const editSubject = (event)=>{
+        setSubject(event.target.value);
+    }
+
+    const editDate = (event)=>{
+        setDate(event.target.value);
+    }
+
+    const editDescription = (event)=>{
+        setDescription(event.target.value);
+    }
+
+    const addEvent=()=>{
+        dispatch(roomsDataAction.addEvent([subject,date,description]));
         setAdd(false);
+    }
+
+    const editEvent = ()=>{
+        dispatch(roomsDataAction.editEvent([prevSubject,subject,date,description]));
+        setEdit(false);
+    }
+
+    const deleteEvent = ()=>{
+        dispatch(roomsDataAction.deleteEvent(props.editSubject)); 
     }
 
     const openAdd = ()=>{
         setAdd(true);
+        setSubject('');
+        setDate('');
+        setDescription('');
     }
 
     const closeAdd = ()=>{
@@ -40,6 +69,11 @@ function EventMenu(props){
 
     const openEdit = ()=>{
         setEdit(true);
+        setSubject(props.editSubject);
+        setDate(props.editDate);
+        setDescription(props.editDescription);
+        setPrevSubject(props.editSubject);
+        
     }
 
     const closeEdit = ()=>{
@@ -49,17 +83,17 @@ function EventMenu(props){
 
     return(
         <StylesProvider injectFirst>
-            <Box className="bg-green-200 flex justify-between rounded-2xl border-2 border-green-400 my-3 mx-3 px-2">
-                <Typography className="mt-2" variant="h5">My Events</Typography>
+            <Box className="bg-gray-700 text-white flex justify-between  my-2 py-3 px-2">
+                <Typography className="text-gray-100 mt-2 ml-3" variant="h6">My Events</Typography>
                 <Box>
-                    <IconButton onClick={openAdd}>
-                        <EventAvailable/>
+                    <IconButton onClick={openAdd} className="hover:bg-gray-400">
+                        <EventAvailable className="text-gray-100 "/>
                     </IconButton>
-                    <IconButton onClick={openEdit} >
-                        <EventNote/>
+                    <IconButton onClick={openEdit} className="hover:bg-gray-400">
+                        <EventNote className="text-gray-100 "/>
                     </IconButton>
-                    <IconButton onClick={props.deleteEvent}>
-                        <EventBusy/>
+                    <IconButton onClick={deleteEvent} className="hover:bg-gray-400">
+                        <EventBusy className="text-gray-100 "/>
                     </IconButton>
                 </Box>
             </Box>
@@ -72,7 +106,7 @@ function EventMenu(props){
                         <TextField type="text" placeholder="Description" onChange={getDescription} />
                     </Box>
                     <Box className="flex justify-end space-x-4 my-2 mt-4">
-                        <Button onClick={sendEventDetails} size="small" className="text-white bg-red-500">Create</Button>
+                        <Button onClick={addEvent} size="small" className="text-white bg-red-500">Create</Button>
                         <Button size="small" className="text-white bg-green-500" onClick={closeAdd}>Cancel</Button>
                     </Box>
                 </DialogContent>
@@ -81,12 +115,12 @@ function EventMenu(props){
                 <DialogTitle>Edit Event</DialogTitle>
                 <DialogContent >
                     <Box className="flex justify-between space-x-3">
-                        <TextField type="text" placeholder="Subject"/>
-                        <TextField type="datetime-local" />
-                        <TextField type="text" placeholder="Description"/>
+                        <TextField type="text" placeholder="Subject" onChange={editSubject} value={subject}/>
+                        <TextField type="datetime-local" onChange={editDate} value={date} />
+                        <TextField type="text" placeholder="Description" onChange={editDescription} value={description} />
                     </Box>
                     <Box className="flex justify-end space-x-4 my-2 mt-4">
-                        <Button size="small" className="text-white bg-red-500">Update</Button>
+                        <Button size="small" className="text-white bg-red-500" onClick={editEvent} >Update</Button>
                         <Button size="small" className="text-white bg-green-500" onClick={closeEdit}>Cancel</Button>
                     </Box>
                 </DialogContent>

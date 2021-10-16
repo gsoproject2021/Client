@@ -1,4 +1,4 @@
-import {Paper,ListItem,ListItemAvatar,Avatar,Typography, TextField} from "@material-ui/core";
+import {ListItem,ListItemAvatar,Avatar,Typography,ListItemText} from "@material-ui/core";
 import {PeopleAltOutlined} from "@material-ui/icons";
 import gso from "../../images/logo1.jpeg";
 import {useState} from "react";
@@ -10,22 +10,20 @@ function Room(props){
     const clickHandle = ()=>{
         setSelectedRoom(true)
         props.getRoomName(props.roomName);
-        // props.isSelected(selectedRoom);
     }
 
     const unCheckRoom = ()=>{
         setSelectedRoom(false);
-        //props.isSelected(selectedRoom);
     }
 
     return(
-            <ListItem button onClick = {clickHandle} selected={selectedRoom} onBlur={unCheckRoom}>
+            <ListItem button onClick={clickHandle} selected={selectedRoom} onBlur={unCheckRoom} className="hover:bg-gray-500 focus:bg-gray-500">
                 <ListItemAvatar>
                     <Avatar src={gso||<PeopleAltOutlined/>}>
                         <PeopleAltOutlined/>
                     </Avatar>
                 </ListItemAvatar>
-                <Typography variant="h6">{props.roomName}</Typography>
+                <ListItemText className="text-gray-200" primary={<Typography variant="subtitle1" >{props.roomName}</Typography>} />
             </ListItem>
     );
 }
