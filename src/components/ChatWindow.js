@@ -1,9 +1,9 @@
 import {Box, Typography,IconButton, TextField, Button} from "@mui/material";
-import { ExitToApp, Send, SendOutlined } from "@mui/icons-material";
+import { ExitToApp,  SendOutlined } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import colors from "../utils/colors";
-import { useContext } from "react";
-import RoomsContext from "../store/rooms-context";
+import { useSelector } from "react-redux";
+
 
 
 const useStyles = makeStyles({
@@ -29,14 +29,14 @@ const useStyles = makeStyles({
 })
 
 export default function ChatWindows(){
-    const roomsCtx = useContext(RoomsContext);
+    const current = useSelector(state => state.cache.currentRoom);
 
 
     const classes = useStyles();
     return(
         <Box sx={{width:'100%',height:'100%',bgcolor:'text.disabled'}}>
             <Box  className={classes.title}>
-                <Typography variant="h4" gutterBottom>{roomsCtx.roomName}</Typography>
+                <Typography variant="h4" gutterBottom> {current.roomName} </Typography>
                 <IconButton sx={{color:colors.blueGray[300]}}>
                     <ExitToApp/>
                 </IconButton>

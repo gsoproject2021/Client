@@ -1,6 +1,6 @@
 import {Box, CardMedia,Card, CardContent, Typography} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import {motion,AnimatePresence} from 'framer-motion/dist/framer-motion';
+import {motion} from 'framer-motion/dist/framer-motion';
 
 const containerVariants = {
     hidden:{

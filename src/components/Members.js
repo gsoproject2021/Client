@@ -1,7 +1,12 @@
-import {Box,List,ListItemButton,ListItemIcon,ListItemText,IconButton,Typography,Divider,Avatar} from '@mui/material';
-import { MoreVert } from '@mui/icons-material';
+import { useState } from 'react';
+import {Box,List,IconButton,Typography,Divider} from '@mui/material';
+import { Add } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import colors from '../utils/colors';
+import AddUsers from './AddUsers';
+import User from './User';
+import {motion} from 'framer-motion/dist/framer-motion';
+import { useSelector } from 'react-redux';
 const useStyles = makeStyles({
     root:{
         height:'50%',
@@ -21,26 +26,34 @@ const useStyles = makeStyles({
 })
 
 export default function Members(){
+
     const classes = useStyles();
+
+    const [open,setOpen] = useState(false);
+
+    const currentRoomUsers = useSelector(state => state.cache.currentRoom.users)
+
+    const handleClose = (status) => {
+        setOpen(status);
+    }
+
+    const showUser = (user) => {
+        return <User key={user.UserID} id={user.UserID} username={user.FirstName} isAdmin={user.IsAdmin} />
+    }
+
     return(
         <Box className={classes.root}>
             <Box className={classes.title}>
                 <Typography variant="h5" gutterBottom >Members</Typography>
-                <IconButton sx={{color:colors.blueGray[300]}} >
-                    <MoreVert/>
+                <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick={()=>setOpen(true)} >
+                    <Add/>
                 </IconButton>
             </Box>
+            <AddUsers openDialog={open} closeDialog={handleClose}/> 
             
             <Divider light />
             <List sx={{bgcolor:'primary.light'}}>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <Avatar></Avatar>
-                    </ListItemIcon>
-                    <ListItemText>
-                        Sport
-                    </ListItemText>
-                </ListItemButton>
+                {currentRoomUsers.map(showUser)}
             </List>
             
         </Box>

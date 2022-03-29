@@ -1,23 +1,36 @@
 import Layout from "./layout/Layout";
-import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { autoLogin } from "./store/user-actions";
 function App() {
-  const [isLogin ,setIsLogin] = useState(false);
+  const token = useSelector(state => state.user.token)
+  const dispatch = useDispatch();
+  const [isLoggedIn ,setIsLoggedIn] = useState(false);
+  
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('data'));
+    console.log(storedUser);
+    if(storedUser && storedUser.token){
+      dispatch(autoLogin(storedUser));
+    }
+  },[dispatch]);
+
+  useEffect(()=>{
+    if(token){
+      setIsLoggedIn(true);
+    }
+    else{
+      setIsLoggedIn(false);
+    }
+  },[token]);
+  
   return (
     <Router>
         <div className="App">
-            {isLogin?<Route  path="/"><MainLayout/></Route> : <Route path="/main"><Layout/></Route>}
-
-
-            {/* <Route  path="/">
-              <MainLayout/>
-            </Route> */}
-            
-            {/* <Route  path="/main">
-              <Layout/>
-            </Route> */}
-          
+            {isLoggedIn ? <Layout/> : <MainLayout/>}
+            {/* {routes} */}
         </div>
     </Router>
     

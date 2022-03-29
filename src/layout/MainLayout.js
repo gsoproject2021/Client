@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import {Box,AppBar, Toolbar,Avatar, Typography, Button} from '@mui/material';
+import {Box,AppBar, Toolbar, Button} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import {motion} from 'framer-motion/dist/framer-motion';
-import {Switch,Route,Link,Redirect} from 'react-router-dom';
-import logopic from '../images/logo1.jpeg';
+import {Switch,Route,Redirect,NavLink} from 'react-router-dom';
+
 import About from '../pages/About';
 import ContactUs from '../pages/ContactUs';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import PasswordReset from '../pages/PasswordReset';
-import Layout from './Layout';
 
+import colors from '../utils/colors';
 
 const useStyles = makeStyles({
     appbar:{
         backgroundColor:'white',
     },
+    links:{
+        textDecoration:'none',
+    }
     
 })
 
@@ -26,31 +29,35 @@ export default function MainLayout(){
     return(
         <Box>
             
-                <AppBar sx={{'&.MuiAppBar-colorPrimary':{bgcolor:'white'}}}>
-                    <Toolbar >
-                        <Avatar sx={{width:250,height:80}} variant="square" src={logopic} />
+                <AppBar  sx={{'&.MuiAppBar-colorPrimary':{bgcolor:'black',height:'75px',fontWeight:'bold'}}}>
+                    <Toolbar  className={classes.links}>
+                        
                         <Box sx={{flexGrow:1,display:'flex'}}>
-                            <Link to='/contact'>
-                                <Button 
+                            <NavLink to='/contact' className={classes.links} >
+                                <Button
+                                sx={{color:colors.blueGray[200],fontWeight:'bold'}}
                                 component = {motion.button}
                                 whileHover={{scale:1.1}}>Contact us</Button>
-                            </Link>
-                            <Link to='/about'>
-                                <Button 
+                            </NavLink>
+                            <NavLink to='/about' className={classes.links}>
+                                <Button
+                                 sx={{color:colors.blueGray[200],fontWeight:'bold'}}
                                 component = {motion.button}
                                 whileHover={{scale:1.1}}>About</Button>
-                            </Link>
+                            </NavLink>
                         </Box>
                         {!isLogin?
-                        <Link to='/signup'>
+                        <NavLink to='/signup'>
+                        <Button
+                            sx={{color:colors.blueGray[200],fontWeight:'bold'}} 
+                            component = {motion.button}
+                            whileHover={{scale:1.1}} onClick={()=>setIsLogin(true)}>Sign Up</Button>
+                        </NavLink>:<NavLink to='/'>
                         <Button 
-                        component = {motion.button}
-                        whileHover={{scale:1.1}} onClick={()=>setIsLogin(true)}>Sign Up</Button>
-                        </Link>:<Link to='/'>
-                        <Button 
-                        component = {motion.button}
-                        whileHover={{scale:1.1}} onClick={()=>setIsLogin(false)}>Login
-                        </Button></Link>  }
+                            sx={{color:colors.blueGray[200],fontWeight:'bold'}}
+                            component = {motion.button}
+                            whileHover={{scale:1.1}} onClick={()=>setIsLogin(false)}>Login
+                        </Button></NavLink>  }
                          
                     </Toolbar>
                     
@@ -63,7 +70,7 @@ export default function MainLayout(){
                 <Route exact path="/login">
                     <Login/>
                 </Route>
-                <Redirect from="/login" to="/main"/>
+                
                 <Route exact path="/signup">
                     <SignUp/>
                 </Route>
@@ -76,7 +83,7 @@ export default function MainLayout(){
                 <Route exact path="/password-reset">
                     <PasswordReset/>
                 </Route>
-                
+                <Redirect to="/login"/>
                 </Switch>
         </Box>
     );

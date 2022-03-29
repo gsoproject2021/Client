@@ -33,13 +33,13 @@ export const RoomsContextProvider = (props)=>{
     
     const [room,setRoom] = useState({id:'',roomName});
     
-    useEffect(() => {
-             axios.get(`http://localhost:4000/rooms?userId=${userId}`)
-            .then(res=>{
-                setRooms(res.data);
-            })
-            .catch(err=>console.log(err));
-    }, [])
+    // useEffect(() => {
+    //          axios.get(`http://localhost:4000/rooms?userId=${userId}`)
+    //         .then(res=>{
+    //             setRooms(res.data);
+    //         })
+    //         .catch(err=>console.log(err));
+    // }, [])
 
     // useEffect(()=>{
     //     axios.get(`http://localhost:4000/events?roomId=${roomId}`)
@@ -53,15 +53,15 @@ export const RoomsContextProvider = (props)=>{
     
         
     
-    const getDetails = (roomId)=>{
-            axios.get('http://localhost:4000/roomDetails',{roomId})
-            .then(res=>{
-                console.log(res);
-            })
-            .catch(err=>{
-                console.log(err);
-            })
-    }
+    // const getDetails = (roomId)=>{
+    //         axios.get('http://localhost:4000/roomDetails',{roomId})
+    //         .then(res=>{
+    //             console.log(res);
+    //         })
+    //         .catch(err=>{
+    //             console.log(err);
+    //         })
+    // }
 
     const addRoom = ()=>{
         console.log(roomName);

@@ -1,15 +1,18 @@
 import {Dialog,DialogTitle,DialogContent,TextField,Button} from '@mui/material';
-import { useContext, useState } from 'react';
-import RoomsContext from '../store/rooms-context';
+import {  useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateRoom } from '../store/rooms-actions';
+
 
 
 
 export default function EditRoom({editRoom,dialogState}){
-    
+    const token = useSelector(state => state.user.token);
+    const dispatch = useDispatch();
+    const currentRoom = useSelector(state => state.cache.currentRoom);
+    const [name,setName] = useState(currentRoom.roomName);
     const [openDialog,setOpenDialog] = useState(false);
-
-    const roomsCtx = useContext(RoomsContext);
-
+    
     const closeDialog = ()=>{
         setOpenDialog(false);
         dialogState(openDialog);
@@ -21,10 +24,12 @@ export default function EditRoom({editRoom,dialogState}){
     }
 
     const handleEditRoom = ()=>{
-        roomsCtx.editRoom();
+        dispatch(updateRoom(currentRoom.roomId,name,token))
         setOpenDialog(false);
         dialogState(openDialog);
+        setName('');
     }
+    
 
     return(
         <Dialog open={editRoom} onClose={closeDialog} >
@@ -32,7 +37,7 @@ export default function EditRoom({editRoom,dialogState}){
                     Edit Room
                 </DialogTitle>
                 <DialogContent>
-                    <TextField placeholder="Room name" variant="filled" value={roomsCtx.roomName} onChange={(event=>{roomsCtx.setRoomName(event.target.value)})} />
+                    <TextField placeholder="Room name" variant="filled" value={name} onChange={event => setName(event.target.value)} />
                     <Button sx={{bgcolor:'success.light', color:'white',mt:2,mx:1}} onClick={handleEditRoom} >Update</Button>
                     <Button onClick={handleCancel} sx={{bgcolor:'error.light',color:'white',mt:2}} >Cancel</Button>
                 </DialogContent>

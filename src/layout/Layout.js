@@ -1,16 +1,19 @@
-import {AppBar, Grid, Toolbar, Typography} from "@mui/material";
+
 import {makeStyles} from "@mui/styles"
 import { blueGrey } from "@mui/material/colors";
 import Menu from "../components/Menu";
-import { Box, width } from "@mui/system";
+import { Box } from "@mui/system";
 import Admin from "../pages/Admin";
 import Profile from "../pages/Profile";
 import Main from "../pages/Main";
 import {Switch,Route,Redirect} from 'react-router-dom';
-import Login from '../pages/Login';
+
 import About from '../pages/About';
 import ContactUs from '../pages/ContactUs';
-import SignUp from "../pages/SignUp";
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../store/user-actions";
 const useStyles = makeStyles({
     left:{
         backgroundColor: blueGrey[700],
@@ -29,6 +32,16 @@ const useStyles = makeStyles({
 
 export default function Layout(){
     const classes = useStyles();
+    
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(login('vitali@test.com'))
+    })
+    const user = useSelector(state => state.user);   
+    
+    const [details,setDetails] = useState(user);
+    
+
     return(
         <Box className={classes.layout} sx={{display:"flex"}}>
             
@@ -37,21 +50,22 @@ export default function Layout(){
                     <Route exact path="/main">
                         <Redirect to="/main/home"/>
                     </Route>
-                    <Route exact path="/main/home">
+                    <Route path="/main/home">
                         <Main/>
                     </Route>
-                    <Route exact path="/main/profile">
-                        <Profile/>
+                    <Route  path="/main/profile">
+                        <Profile userDetails = {details} />
                     </Route>
-                    <Route exact path="/main/admin">
+                    { user.data.isAdmin && <Route  path="/main/admin">
                         <Admin/>
-                    </Route>
-                    <Route exact path="/main/contact">
+                    </Route> }
+                    <Route  path="/main/contact">
                         <ContactUs/>
                     </Route>
-                    <Route exact path="/main/about">
+                    <Route  path="/main/about">
                         <About/>
                     </Route>
+                    <Redirect to="/main"/>
                 </Switch>  
         </Box>
     );

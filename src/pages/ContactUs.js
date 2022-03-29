@@ -43,7 +43,7 @@ export default function ContactUs(){
                 <TextField fullWidth label="Email" sx={{mb:3}} />
                 <TextField fullWidth placeholder="Type a messeage" sx={{mb:2}} multiline minRows={10} />
                 <Box sx={{px:'35%',pt:'5%'}}>
-                    <Button size="large" fullWidth>Send</Button>
+                    <Button variant="contained" size="large" fullWidth>Send</Button>
                 </Box>
             </Box>
         </AnimatePresence>

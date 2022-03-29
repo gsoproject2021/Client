@@ -1,12 +1,13 @@
-import {Box,Divider,Typography,IconButton,ListItemText,List,ListItemIcon,Fade,ListItemButton,Avatar,Dialog,DialogContent,DialogTitle,TextField,Button} from "@mui/material";
-import { MoreVert,Add,Edit,DeleteForever } from "@mui/icons-material";
+import {Box,Divider,Typography,IconButton,List,Dialog,DialogContent,DialogTitle,TextField,Button} from "@mui/material";
+import { Add } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
-import { useState,useContext } from "react";
+import { useState } from "react";
 import colors from "../utils/colors";
 import {motion} from 'framer-motion/dist/framer-motion';
 import AddEvent from "./AddEvent";
 import Event from '../components/Event';
-import RoomsContext from "../store/rooms-context";
+import { useSelector } from "react-redux";
+
 
 const useStyles = makeStyles({
     root:{
@@ -26,26 +27,28 @@ const useStyles = makeStyles({
     }
 })
 
-const containerVariants = {
-    hidden:{
-        opacity:0,
-        x:200
-    },
-    visible:{
-        opacity:1,
-        x:0,
-        delay:3
-    },
-    exit:{
-        opacity:0,
-        x:-200
-    }
-}
+// const containerVariants = {
+//     hidden:{
+//         opacity:0,
+//         x:200
+//     },
+//     visible:{
+//         opacity:1,
+//         x:0,
+//         delay:3
+//     },
+//     exit:{
+//         opacity:0,
+//         x:-200
+//     }
+// }
 
 export default function Events(){
-    const roomsCtx = useContext(RoomsContext);
+
+    const currentRoom = useSelector(state => state.cache.currentRoom);
+    
     const classes = useStyles();
-    const [addMenu,setAddMenu] = useState(false);
+    // const [addMenu,setAddMenu] = useState(false);
     const [addEvent,setAddEvent] = useState(false);
     const [editEvent,setEditEvent] = useState(false);
     
@@ -54,46 +57,23 @@ export default function Events(){
         setAddEvent(status);
     }
 
+    
+
     const showEvent = (event)=>{
-        return <Event key={event.id} subject={event.subject} date={event.date} description={event.description} />
+        return <Event key={event.eventId} eventId={event.eventId} subject={event.subject} date={event.date} hour={event.hour} description={event.description} />
     }
 
     return(
         <Box className={classes.root}>
             <Box className={classes.title}>
-                <Typography variant="h5" gutterBottom >Events</Typography>
-                <Box onMouseLeave={()=>setAddMenu(false)}>
-                {addMenu?<Fade in={addMenu}>
-                <Box onMouseLeave={()=>setAddMenu(false)}>
-                {addMenu?<Fade in={addMenu}>
-                    <Box  component={motion.div} 
-                        variants={containerVariants}
-                        initial='hidden' 
-                        animate='visible' 
-                        exit='exit' >
-                            <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick={()=>setAddEvent(true)}>
-                                <Add/>
-                            </IconButton >
-                            <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick={()=>setEditEvent(true)}>
-                                <Edit/>
-                            </IconButton>
-                            <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick={roomsCtx.deleteEvent} >
-                                <DeleteForever/>
-                            </IconButton>
-                    </Box>
-                </Fade>:
-                <IconButton sx={{color:colors.blueGray[300]}} onMouseEnter={()=>setAddMenu(true)}>
-                    <MoreVert/>
-                </IconButton>}
-                </Box>
-                </Fade>:
-                <IconButton sx={{color:colors.blueGray[300]}} onMouseEnter={()=>setAddMenu(true)}>
-                    <MoreVert/>
-                </IconButton>}
-                </Box>
+                 <Typography variant="h5" gutterBottom >Events</Typography>
+                 <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = {() => setAddEvent(true)} >
+                    <Add/>
+                 </IconButton >     
             </Box>
             
             <AddEvent addEvent={addEvent} dialogState={addDialog} /> 
+
             <Dialog open={editEvent} onClose={()=>setEditEvent(false)} >
                 <DialogTitle>
                     Edit Event
@@ -114,23 +94,8 @@ export default function Events(){
             
             <Divider light />
             <List sx={{bgcolor:'primary.light'}}>
-                {roomsCtx.events.map(showEvent)}
-                {/* <ListItemButton>
-                    <ListItemText sx={{borderRadius:20}} >
-                        <Box sx={{display:'flex',justifyContent:'space-between'}}>
-                            <Typography variant='h6' gutterBottom>   
-                                Birthday
-                            </Typography>
-                            <Typography variant="subtitle1" gutterBottom>
-                                01/11/21 22:00
-                            </Typography>
-                        </Box>
-                        <Typography>
-                            jsjdkfbjskdf jdsnfjksdf njndjnjknj
-                            sdfsdfsdfsdfsdfsdfsdfsdf
-                        </Typography>
-                    </ListItemText> 
-                </ListItemButton> */}
+                {currentRoom.events.map(showEvent)}
+                
             </List>
             
         </Box>

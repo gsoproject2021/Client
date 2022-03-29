@@ -1,15 +1,16 @@
 import {NavLink} from 'react-router-dom';
 
 
-import { Button, Drawer,List, ListItemButton, ListItemIcon, ListItemText, Typography,Box } from "@mui/material";
+import { Button, Drawer,List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import {ContactPage, Home, Info, Logout, ManageAccounts, Person,} from '@mui/icons-material';
 import { makeStyles } from "@mui/styles";
-import { padding } from "@mui/system";
+
 import Logo from "./Logo";
 import UserPic from "./UserPic";
 import colors from '../utils/colors';
 import {motion} from 'framer-motion/dist/framer-motion';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../store/user-actions';
 
 const useStyles = makeStyles({
     root:{
@@ -44,7 +45,12 @@ const useStyles = makeStyles({
 
 export default function Menu(){
     const classes = useStyles()
+    const user = useSelector(state => state.user);
+    const dispatch = useDispatch()
     
+    const logoutHandler = () => {
+        dispatch(logout());
+    }
     
     return(
         <Drawer 
@@ -80,14 +86,14 @@ export default function Menu(){
                         <ListItemText  primary={<Typography variant="h6">Profile</Typography>}/>
                     </ListItemButton>
                 </NavLink>
-                <NavLink className={classes.link} to='/main/admin'>
+                {user.data.isAdmin && <NavLink className={classes.link} to='/main/admin'>
                     <ListItemButton className={classes.btn} component={motion.button} whileHover={{scale:1.3}} whileTap={{ scale: 0.95 }}>
                         <ListItemIcon className={classes.btn}>
                             <ManageAccounts/>
                         </ListItemIcon>
                         <ListItemText primary={<Typography variant="h6">Management</Typography>}/>
                     </ListItemButton>
-                </NavLink>
+                </NavLink>}
                 <NavLink className={classes.link} to='/main/contact'>
                     <ListItemButton className={classes.btn} component={motion.button} whileHover={{scale:1.3}} whileTap={{ scale: 0.95 }}>
                     <ListItemIcon className={classes.btn}>
@@ -105,8 +111,10 @@ export default function Menu(){
                     </ListItemButton>
                 </NavLink>
             </List>
-            <Button sx={{mt:25,color:colors.blueGray[200],backgroundColor:'error.main'}} classes={{root:classes.logout}} endIcon={<Logout/>}>Logout</Button>
             
+            <Button onClick={logoutHandler} sx={{mt:25,color:colors.blueGray[200],backgroundColor:'error.main'}} classes={{root:classes.logout}} endIcon={<Logout/>}>Logout</Button>
+            
+               
         </Drawer>
     );
 }

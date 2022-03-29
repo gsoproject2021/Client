@@ -1,29 +1,32 @@
-import { useState,useContext } from "react";
+import { useState } from "react";
 import { Dialog,DialogTitle,DialogContent,Button,TextField } from "@mui/material"
-import { useMutation } from "react-query";
-import axios from "axios";
-import RoomsContext from "../store/rooms-context";
+import { useDispatch, useSelector } from "react-redux";
+import { createRoom } from "../store/rooms-actions";
+
 
 
 
 export default function AddRoom({addRoom,dialogState}){
-    const roomsCtx = useContext(RoomsContext);
+    const token = useSelector(state => state.user.token);
+    const dispatch = useDispatch();
     const [openDialog,setOpenDialog] = useState(addRoom);
-    
+    const [roomName,setRoomName] = useState('');
     
 
     const closeDialog = ()=>{
+        setRoomName('');
         setOpenDialog(false);
         dialogState(openDialog);
     }
 
     const handleCancel = ()=>{
+        setRoomName('');
         setOpenDialog(false);
         dialogState(openDialog);
     }
 
     const addNewRoom = ()=>{   
-        roomsCtx.addRoom(); 
+        dispatch(createRoom(roomName,token));
         setOpenDialog(false);
         dialogState(openDialog);
     }
@@ -34,7 +37,7 @@ export default function AddRoom({addRoom,dialogState}){
                     Create New Room
                 </DialogTitle>
                 <DialogContent>
-                    <TextField placeholder="Room name" variant="filled" onChange={(event)=>roomsCtx.setRoomName(event.target.value) } />
+                    <TextField placeholder="Room name" variant="filled"  onChange={event=> setRoomName(event.target.value)}/>
                     <Button sx={{bgcolor:'success.light', color:'white',mt:2,mx:1}} onClick={addNewRoom} >Add</Button>
                     <Button onClick={handleCancel} sx={{bgcolor:'error.light',color:'white',mt:2}} >Cancel</Button>
                 </DialogContent>

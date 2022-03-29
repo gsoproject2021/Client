@@ -4,16 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
-import {store} from './store/store';
-import {QueryClient,QueryClientProvider} from 'react-query';
-import { RoomsContextProvider } from './store/rooms-context';
+import  store  from './store/index';
 
-const  queryClient = new QueryClient();
+
+
+
 
 ReactDOM.render(
-  <RoomsContextProvider >
+  <Provider store={store}>
     <App />
-  </RoomsContextProvider>,
+  </Provider>,
   document.getElementById('root')
 );
 

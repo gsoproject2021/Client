@@ -1,12 +1,13 @@
 import { makeStyles } from "@mui/styles";
 
-import { Grid,Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import Rooms from "../components/Rooms";
 import Events from "../components/Events";
 import ChatWindow from '../components/ChatWindow';
 import Members from '../components/Members'
 import { motion } from "framer-motion/dist/framer-motion";
 import colors from "../utils/colors";
+
 
 
 
@@ -36,6 +37,8 @@ const useStyles = makeStyles({
 
 export default function Main(){
     const classes = useStyles();
+
+    
     return(
         <Grid component={motion.div} container item xs={10} className={classes.root} >
             <Grid item lg={3} md={3} xs={12} className={classes.rooms} sx={{borderRight:2, borderRightColor:colors.blueGray[700]}} >
