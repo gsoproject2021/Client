@@ -1,7 +1,7 @@
 import axios from "axios";
 import  { adminActions } from "./admin-slice";
 
-export const fetchAllUsers = () => {
+export const fetchAllUsers = (token) => {
     return async (dispatch) => {
         const getUsers = async () => {
             const response = await axios.get('http://localhost:4000/users');
@@ -60,10 +60,10 @@ export const deleteUser = (userId) => {
     }
 };
 
-export const fetchAllRooms = () => {
+export const fetchAllRooms = (token) => {
     return async (dispatch) => {
         const getRooms = async () => {
-            const response = await axios.get('http://localhost:4000/rooms');
+            const response = await axios.get('http://localhost:4000/rooms',{headers:{Authorization:`Bearer ${token}`}});
 
             if(!response){
                 throw new Error('something went wrong');
@@ -232,10 +232,10 @@ export const fetchUser = (userId) => {
     }
 };
 
-export const fetchRoom = (roomId) => {
+export const fetchRoom = (roomId,token) => {
     return async (dispatch) => {
         const getRoom = async () => {
-            const response = await axios.get(`http://localhost:4000/roomDetails/${roomId}`);
+            const response = await axios.get(`http://localhost:4000/roomDetails/${roomId}`,{headers:{Authorization:`Bearer ${token}`}});
             
             if(!response){
                 throw new Error('somthing went wrong');

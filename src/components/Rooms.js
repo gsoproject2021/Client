@@ -11,6 +11,8 @@ import EditRoom from "./EditRoom";
 import { useSelector,useDispatch } from "react-redux";
 import { fetchRoomsData,deleteRoom } from "../store/rooms-actions";
 
+import io from 'socket.io-client';
+import roomsSlice, { roomsActions } from "../store/room-slice";
 
 
 const useStyles = makeStyles({
@@ -48,21 +50,20 @@ export default function Rooms(){
     
     const user = useSelector(state => state.user);
     const rooms = useSelector(state => state.rooms.rooms);
-    const current = useSelector(state => state.cache.currentRoom);
+    const current = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
-
     const classes = useStyles();
     const [addMenu,setAddMenu] = useState(false);
     const [addRoom,setAddRoom] = useState(false);
     const [editRoom,setEditRoom] = useState(false);
+    const [newRoom,setNewRoom] = useState();
     
-
     const removeRoom = ()=>{
-        dispatch(deleteRoom(current.roomId,user.token)); 
+        dispatch(deleteRoom(current.roomId,current.users,user.token)); 
     }
     
     const showRooms = (room)=>{
-      return  <Room key={room.id} roomName={room.roomName} id={room.id} />
+      return  <Room key={room.roomId} roomName={room.roomName} roomId={room.roomId} image={room.image} />
     }
     const addDialog = (addStatus)=>{
         setAddRoom(addStatus);    
@@ -72,17 +73,23 @@ export default function Rooms(){
         setEditRoom(editStatus);
     }
 
+    
     useEffect(()=>{
         dispatch(fetchRoomsData(user.data.userId,user.token));
+        
     },[dispatch]);
+
+    
+        console.log(rooms);
+    
     
     return(
         <Box className={classes.root}>
             
             <Box className={classes.title}>
                 <Typography sx={{color:colors.blueGray[300]}} variant="h5" gutterBottom >Rooms</Typography>
-                <Box onMouseLeave={()=>setAddMenu(false)}>
-                {addMenu?<Fade in={addMenu}>
+                <Box >
+                {true?<Fade in={true}>
                     <Box  component={motion.div} 
                         variants={containerVariants}
                         initial='hidden' 
@@ -99,14 +106,14 @@ export default function Rooms(){
                             </IconButton>
                     </Box>
                 </Fade>:
-                <IconButton sx={{color:colors.blueGray[300]}} onMouseEnter={()=>setAddMenu(true)}>
+                <IconButton sx={{color:colors.blueGray[300]}} >
                     <MoreVert/>
                 </IconButton>}
                 </Box>
             </Box>
 
             <AddRoom addRoom={addRoom} dialogState={addDialog} />
-            <EditRoom editRoom={editRoom} dialogState={editDialog} />
+            <EditRoom editRoom={editRoom} roomName={current.roomName} dialogState={editDialog} />
             
 
             <Divider  />
@@ -149,3 +156,8 @@ export default function Rooms(){
     );
 
 }   
+
+
+
+// onMouseLeave={()=>setAddMenu(addMenu => !addMenu)
+// onMouseEnter={()=>setAddMenu(addMenu => !addMenu)}

@@ -9,7 +9,7 @@ import { addUsersToRoom } from '../store/cache-actions';
 
 export default function AddUsers({openDialog,closeDialog}){
     const token = useSelector(state => state.user.token);
-    const currentRoom = useSelector(state => state.cache.currentRoom);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
     const [checked,setChecked] = useState([]);
     const [users,setUsers] = useState([]);
@@ -36,7 +36,7 @@ export default function AddUsers({openDialog,closeDialog}){
         dispatch(addUsersToRoom(data,currentRoom,token));
         setChecked([]);
         closeDialog(false);
-        console.log(currentRoom);
+        
     }
 
     useEffect(()=>{
@@ -46,12 +46,12 @@ export default function AddUsers({openDialog,closeDialog}){
                 throw new Error("something went wrong");
             }
             setUsers(response.data);
-            console.log(users);
+            
         })
         .catch(err => {
             console.log(err);
         })
-    },[]);
+    },[openDialog]);
 
 
 
@@ -64,16 +64,16 @@ export default function AddUsers({openDialog,closeDialog}){
         aria-describedby="alert-dialog-description"
       >
             <DialogTitle id="alert-dialog-title">
-            <Typography variant='h4'>Users</Typography>
+            <Typography variant='h4' component={'span'} >Users</Typography>
             </DialogTitle>
             <DialogContent>
             <List dense sx={{ width: '100%',height: 500, maxWidth: 360, bgcolor: 'background.paper' ,overflow: 'auto' }}>
         {users.map((user) => {
         
         return (
-          <ListItem
+          <ListItem 
             sx = {{width:275}}
-            key={user.UserId}
+            key={user.userId}
             secondaryAction={
               <Checkbox
                 edge="end"
@@ -86,9 +86,7 @@ export default function AddUsers({openDialog,closeDialog}){
           >
             <ListItemButton>
               <ListItemAvatar>
-                <Avatar
-                  
-                />
+                <Avatar />
               </ListItemAvatar>
               <ListItemText id={`${user.userId}`} primary={`${user.firstName}`} />
             </ListItemButton>

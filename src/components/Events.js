@@ -45,7 +45,7 @@ const useStyles = makeStyles({
 
 export default function Events(){
 
-    const currentRoom = useSelector(state => state.cache.currentRoom);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
     
     const classes = useStyles();
     // const [addMenu,setAddMenu] = useState(false);

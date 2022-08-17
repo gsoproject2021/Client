@@ -6,7 +6,8 @@ import { updateEventDetails } from "../store/cache-actions";
 
 export default function EditEvent({editEvent,dialogState,eventId,subject,date,description}){
     const dispatch = useDispatch();
-    const currentRoom = useSelector(state => state.cache.currentRoom);
+    const token = useSelector(state => state.user.token);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
 
     const [newSubject,setNewSubject] = useState(subject);
     const [newDate,setNewDate] = useState(date);
@@ -21,10 +22,10 @@ export default function EditEvent({editEvent,dialogState,eventId,subject,date,de
     }
 
     const updateEvent = () => {
-        const currentEvent = {eventId:eventId,subject:newSubject,date:newDate,description:newDescription};
+        const currentEvent = {eventId:eventId,eventSubject:newSubject,eventDate:newDate,eventDescription:newDescription};
         console.log(currentEvent);
-        dispatch(updateEventDetails(currentEvent));
-        dispatch(cacheActions.updateCache(currentRoom));
+        dispatch(updateEventDetails(currentEvent,currentRoom.roomId,token));
+        
         dialogState(false);
     }
 

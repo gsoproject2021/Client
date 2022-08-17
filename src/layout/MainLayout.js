@@ -3,6 +3,7 @@ import {Box,AppBar, Toolbar, Button} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import {motion} from 'framer-motion/dist/framer-motion';
 import {Switch,Route,Redirect,NavLink} from 'react-router-dom';
+import io from 'socket.io-client';
 
 import About from '../pages/About';
 import ContactUs from '../pages/ContactUs';
@@ -25,7 +26,11 @@ const useStyles = makeStyles({
 
 export default function MainLayout(){
     const classes = useStyles();
-    const [isLogin,setIsLogin] = useState(false)
+    const [isLogin,setIsLogin] = useState(false);
+    
+    
+    
+
     return(
         <Box>
             

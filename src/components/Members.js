@@ -31,14 +31,14 @@ export default function Members(){
 
     const [open,setOpen] = useState(false);
 
-    const currentRoomUsers = useSelector(state => state.cache.currentRoom.users)
-
+    const currentRoom = useSelector(state => state.rooms.currentRoom)
+    
     const handleClose = (status) => {
         setOpen(status);
     }
 
     const showUser = (user) => {
-        return <User key={user.UserID} id={user.UserID} username={user.FirstName} isAdmin={user.IsAdmin} />
+        return <User key={user.userId} userId={user.userId} firstName={user.firstName} isAdmin={user.isAdmin} image={user.image} isOnline={user.isOnline} />
     }
 
     return(
@@ -53,7 +53,7 @@ export default function Members(){
             
             <Divider light />
             <List sx={{bgcolor:'primary.light'}}>
-                {currentRoomUsers.map(showUser)}
+                {currentRoom.users.map(showUser)}
             </List>
             
         </Box>

@@ -29,14 +29,14 @@ const useStyles = makeStyles({
 })
 
 export default function ChatWindows(){
-    const current = useSelector(state => state.cache.currentRoom);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
 
 
     const classes = useStyles();
     return(
         <Box sx={{width:'100%',height:'100%',bgcolor:'text.disabled'}}>
             <Box  className={classes.title}>
-                <Typography variant="h4" gutterBottom> {current.roomName} </Typography>
+                <Typography variant="h4" gutterBottom> {currentRoom.roomName} </Typography>
                 <IconButton sx={{color:colors.blueGray[300]}}>
                     <ExitToApp/>
                 </IconButton>

@@ -5,13 +5,14 @@ import {Box,Typography,Grid,TextField,FormControl,FormLabel,RadioGroup,FormContr
 
 
 export default function Profile({userDetails}){
-    const {firstName,lastName,email} = userDetails;
+    const {firstName,lastName,email,gender} = userDetails;
     // const user = useSelector(state => state.admin.managedUser);
     // gender,isAdmin,isAdvertiser
     // console.log(user);
     const [first,setFirst] = useState(firstName);
     const [last,setLast] = useState(lastName);
     const [mail,setMail] = useState(email);
+    const [userGender,setUserGender] = useState(gender);
     
     // const [userGender,setUserGender] = useState(gender);
     // const [admin,setAdmin] = useState(isAdmin);
@@ -51,7 +52,7 @@ export default function Profile({userDetails}){
               <Box sx={{ width:'50%', mx: 'auto', my: 8,px:10,py:4}}>
                 <form>
                     <Grid>
-                    <Typography sx={{my:8}} variant="h3" align='center'>{first}</Typography>
+                    <Typography sx={{my:8}} variant="h3" align='center'>{first} {last} </Typography>
                     <Grid sx={{ display: "flex", my: 2 }}>
                         <TextField
                         sx={{ mr: 1 }}
@@ -90,10 +91,10 @@ export default function Profile({userDetails}){
                             />
                         </RadioGroup>
                         </FormControl>
-                        <FormControlLabel
+                        {/* <FormControlLabel
                         control={<Checkbox  />}
                         label="is Advertiser?"
-                        />
+                        /> */}
                     </Grid>
             
                     <Grid sx={{ my: 2 }}>

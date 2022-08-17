@@ -10,7 +10,7 @@ export default function ManagedUser({userId,firstName}){
     const dispatch = useDispatch();
 
     const fetchManagedUser = () => {   
-
+        
         dispatch(fetchUser(userId));
     }
     

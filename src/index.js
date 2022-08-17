@@ -6,14 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux';
 import  store  from './store/index';
 
-
+import { socket,SocketContext } from './utils/socket';
 
 
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  <SocketContext.Provider value={socket}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+    </SocketContext.Provider>
+  ,
   document.getElementById('root')
 );
 

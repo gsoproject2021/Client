@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {cacheActions} from './cache-slice';
+import { roomsActions } from './room-slice';
 
 
 
@@ -28,7 +29,7 @@ export const fetchRoomDetails = (roomId,roomName,token) => {
 export const addUsersToRoom = (users,currentRoom,token) => {
     return async (dispatch)=>{
         const addToRoom = async ()=>{
-            const response = await axios.post(`http://localhost:4000/roomUser/${currentRoom.roomId}`,{users:users,roomId:currentRoom.roomId},{headers:{Authorization:`Bearer ${token}`}});
+            const response = await axios.post(`http://localhost:4000/roomUser/${currentRoom.roomId}`,{users:users,roomId:currentRoom.roomId,existedRoom:currentRoom.roomName},{headers:{Authorization:`Bearer ${token}`}});
         
             if(!response){
                 throw new Error("user didn't add to room");
@@ -39,10 +40,10 @@ export const addUsersToRoom = (users,currentRoom,token) => {
         try{
             
             const addedUsers = await addToRoom();
-            
-            const currentData = {roomId:currentRoom.roomId,roomName:currentRoom.roomName,events:currentRoom.events,users:addedUsers};
-            dispatch(cacheActions.currentRoom(currentData));
-            dispatch(cacheActions.updateCache(currentData));
+            console.log(addedUsers);
+            //const currentData = {roomId:currentRoom.roomId,roomName:currentRoom.roomName,events:currentRoom.events,users:addedUsers};
+            console.log(addedUsers);
+            dispatch(roomsActions.addUser(addedUsers));
         }catch(err){
             console.log(err);
         }
@@ -62,11 +63,7 @@ export const removeUserFromRoom = (userId,currentRoom,token) => {
         try{
             const message = await deleteUser();
             console.log(message);
-            const users = currentRoom.users;
-            const data = users.filter(user => user.UserID !== userId);
-            const currentData = {roomId:currentRoom.roomId,roomName:currentRoom.roomName,events:currentRoom.events,users:data};
-            dispatch(cacheActions.currentRoom(currentData));
-            dispatch(cacheActions.updateCache(currentData));
+            dispatch(roomsActions.removeUser(userId,currentRoom.roomId));
         }catch(err){
             console.log(err);
         }
@@ -114,8 +111,8 @@ export const createEvent = (currentRoom,eventDetails,token) => {
         } 
         try{
             const event = await newEvent();
-            console.log(event);
-            dispatch(cacheActions.addEvent(event));
+            console.log('recived',event);
+            dispatch(roomsActions.addEvent(event));
         }catch(err){
             console.log(err);
         }
@@ -123,17 +120,21 @@ export const createEvent = (currentRoom,eventDetails,token) => {
     } 
 };
 
-export const removeEvent = (roomId,eventId,token) => {
+export const removeEvent = (eventId,roomId,token) => {
+    
     return async (dispatch) => {
         const deleteEvent = async () => {
-            const response = await axios.delete(`http://localhost:4000/event/${eventId}`,{roomId:roomId},{headers:{Authorization:`Bearer ${token}`}});
+            const response = await axios.delete(`http://localhost:4000/event/`,{data:{roomId:roomId,eventId:eventId},headers:{Authorization:`Bearer ${token}`}});
             if(!response){
                 throw new Error("Room didn't deleted");
             }
+            const data = response.data;
+            return data;
        }
        try{
-           await deleteEvent();
-           dispatch(cacheActions.removeEventById(eventId));
+           const deleted = await deleteEvent();
+           console.log(deleted);
+           dispatch(roomsActions.deleteEvent({eventId,roomId}));
        }catch(err){
            console.log(err);
        }
@@ -144,7 +145,7 @@ export const updateEventDetails = (event,roomId,token) => {
     console.log(event);
     return async (dispatch) => {
         const editEvent = async () =>{
-        const response = await axios.put('http://localhost:4000/event',{eventId:event.eventId,subject:event.subject,eventDate:event.date,description:event.description,roomId:roomId});
+        const response = await axios.put('http://localhost:4000/event',{event:event,roomId:roomId},{headers:{Authorization:`Bearer ${token}`}});
             if(!response){
                 throw new Error("event didn't updated");
             }
@@ -153,7 +154,8 @@ export const updateEventDetails = (event,roomId,token) => {
         }
         try{
             const updatedEvent = await editEvent();
-            dispatch(cacheActions.updateEvent(updatedEvent));
+            
+            dispatch(roomsActions.updateEvent(updatedEvent));
         }catch(err){
             console.log(err);
         }

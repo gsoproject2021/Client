@@ -34,12 +34,10 @@ export default function Layout(){
     const classes = useStyles();
     
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(login('vitali@test.com'))
-    })
+    
     const user = useSelector(state => state.user);   
     
-    const [details,setDetails] = useState(user);
+    const [details,setDetails] = useState(user.data);
     
 
     return(

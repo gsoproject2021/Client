@@ -9,11 +9,16 @@ const userSlice = createSlice({
             state.data = action.payload.data;
             state.token = action.payload.token;
             localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token}));
+            
         },
         logout(state,action){
             state.data = {};
             state.token = '';
             localStorage.removeItem('data');
+        },
+        changePicture(state,action){
+            state.data.image = '';
+            state.data.image = action.payload;
         }
     }
 });

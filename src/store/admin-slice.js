@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const adminSlice = createSlice({
     name: 'admin',
-    initialState:{users:[],rooms:[],publicRooms:[],managedUser:{userId:0},managedRoom:{}},
+    initialState:{users:[],rooms:[],publicRooms:[],managedUser:{userId:0},managedRoom:{users:[],events:[]}},
     reducers:{
 
         loadUsers(state,action){

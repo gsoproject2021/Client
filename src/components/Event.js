@@ -13,18 +13,20 @@ import EditEvent from "./EditEvent";
 export default function Event({eventId,subject,date,hour,description}){
     
     const dispatch = useDispatch();
-    const currentRoom = useSelector(state => state.cache.currentRoom);
+    const token = useSelector(state => state.user.token);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
 
     const [isSelected,setIsSelected] = useState();
     const [actions,setActions] = useState(false);
     const [openEditDialog,setOpenEditDialog] = useState(false);
 
-    const tempDate = date.split(' ');
-    const formatedDate = `${tempDate[0]}T${tempDate[1]}`;
+    // const tempDate = date.split(' ');
+    const formatedDate = `${date}T${hour}`;
 
     const handleClick = ()=>{
         setIsSelected(eventId);
         console.log(isSelected,eventId);
+        console.log(formatedDate);
         
     }
 
@@ -33,8 +35,7 @@ export default function Event({eventId,subject,date,hour,description}){
     }
 
     const deleteEvent = () => {
-        dispatch(removeEvent(eventId));
-        dispatch(cacheActions.updateCache(currentRoom));
+        dispatch(removeEvent(eventId,currentRoom.roomId,token));
     }
     
     return(
@@ -46,7 +47,7 @@ export default function Event({eventId,subject,date,hour,description}){
                             </Typography>
                             
                             <Typography variant="subtitle1" gutterBottom>
-                                `${hour} ${date}`
+                                {hour} {date}
                             </Typography>
                             {actions &&
                             <Box>

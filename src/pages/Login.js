@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {motion,AnimatePresence} from 'framer-motion/dist/framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/user-actions';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import logopic from '../images/logo1.jpeg'
 
 const containerVariants = {
@@ -32,13 +32,14 @@ export default function Login(){
     const dispatch = useDispatch();
 
     const emailChangeHandler = (event) => {
-        console.log(event.target.value);
+        
         setEmail(event.target.value);
     }
     
     const loginHandle = (event) => {
         event.preventDefault();
         dispatch(login(email,password));
+        
         
     }
 

@@ -6,11 +6,12 @@ import { updateRoom } from '../store/rooms-actions';
 
 
 
-export default function EditRoom({editRoom,dialogState}){
+export default function EditRoom({editRoom,dialogState,roomName}){
     const token = useSelector(state => state.user.token);
     const dispatch = useDispatch();
-    const currentRoom = useSelector(state => state.cache.currentRoom);
-    const [name,setName] = useState(currentRoom.roomName);
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
+    const [name,setName] = useState(roomName);
+    
     const [openDialog,setOpenDialog] = useState(false);
     
     const closeDialog = ()=>{
@@ -37,7 +38,7 @@ export default function EditRoom({editRoom,dialogState}){
                     Edit Room
                 </DialogTitle>
                 <DialogContent>
-                    <TextField placeholder="Room name" variant="filled" value={name} onChange={event => setName(event.target.value)} />
+                    <TextField placeholder="Room name" variant="filled" autoFocus value={name} onChange={event => setName(event.target.value)} />
                     <Button sx={{bgcolor:'success.light', color:'white',mt:2,mx:1}} onClick={handleEditRoom} >Update</Button>
                     <Button onClick={handleCancel} sx={{bgcolor:'error.light',color:'white',mt:2}} >Cancel</Button>
                 </DialogContent>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 
-import { Box,AppBar,Grid,Toolbar,Typography,Tab,List} from "@mui/material";
+import { Box,AppBar,Grid,Toolbar,Typography,Tab,List, Button} from "@mui/material";
+import { Block, Delete } from "@mui/icons-material";
 import {TabContext,TabList,TabPanel } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
 import Profile from "./Profile";
@@ -10,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllRooms, fetchAllUsers } from "../store/admin-actions";
 import ManagedUser from "../components/ManagedUser";
 import ManagedRoom from "../components/ManagedRoom";
+import UserProfile from "../components/UserProfile";
 
 
 const useStyles = makeStyles((theme)=>{
@@ -26,13 +28,14 @@ const useStyles = makeStyles((theme)=>{
 export default function Admin(props){
 
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
     const managedUsers = useSelector(state => state.admin.users);
     const managedRooms = useSelector(state => state.admin.rooms);
-    // const managedUser = useSelector(state => state.admin.managedUser);
-    // const managedRoom = useSelector(state => state.admin.managedRoom);
+    
 
     const [value, setValue] = useState('users');
     const [manage,setManage] = useState(true);
+    const [managedUser,setManagedUser] = useState(user);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -42,7 +45,7 @@ export default function Admin(props){
     
     useEffect(() => {
         dispatch(fetchAllUsers());
-        dispatch(fetchAllRooms());
+        dispatch(fetchAllRooms(user.token));
         
     },[dispatch]);
     console.log(managedUsers);
@@ -69,28 +72,30 @@ export default function Admin(props){
             <Grid container>
                 <Grid item lg={2}>
                     <Box sx={{ width: '100%', typography: 'body1',borderRight: 1,borderRightColor:"disabled.text",height:"100%",my:2,px:1,boxShadow:3}}>
-                        <TabContext value={value}>
+                        
+                        <TabContext  value={value}>
                             <Box sx={{ height:'100%', borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList onChange={handleChange}  aria-label="lab API tabs example">
                                     <Tab sx={{width:'50%'}} label="Users" value='users' />
                                     <Tab sx={{width:'50%'}} label="Rooms" value='rooms' />  
                                 </TabList>
+                                <TabPanel value='users'>
+                                    <List>
+                                        {managedUsers.map(showUsers)}
+                                    </List>
+                                </TabPanel>
+                                <TabPanel value='rooms'>
+                                    <List>
+                                        {managedRooms.map(showRooms)}
+                                    </List>
+                                </TabPanel>
                             </Box>
-                            <TabPanel value='users'>
-                                <List>
-                                    {managedUsers.map(showUsers)}
-                                </List>
-                            </TabPanel>
-                            <TabPanel value='rooms'>
-                                <List>
-                                    {managedRooms.map(showRooms)}
-                                </List>
-                            </TabPanel>
                         </TabContext>
                     </Box>
                 </Grid>
                 <Grid item lg={10}>
-                    {!manage?<RoomManagement/>:<Profile />}
+                        
+                    {!manage?<RoomManagement/>:<UserProfile />}
                 </Grid>
             </Grid>
             
