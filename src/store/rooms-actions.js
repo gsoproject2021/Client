@@ -10,17 +10,18 @@ export const fetchRoomsData = (userId,token) =>{
             const response = await axios.get(`http://localhost:4000/roomUser/${userId}`,{headers:{Authorization:`Bearer ${token}`}});
             
             if(!response){
-                throw new Error("somthing went wrong");
+                throw new Error("something went wrong");
             }
 
-            const data = await response.data;
+            const data = response.data;
 
             return data;
         
         };
         try{
             const roomsData = await fetchRooms();
-            dispatch(roomsActions.loadRooms(roomsData));
+            
+            dispatch(roomsActions.loadRooms({roomsData,userId}));
         }catch(error){
             console.log(error);
         }
@@ -28,10 +29,10 @@ export const fetchRoomsData = (userId,token) =>{
 };
 
 export const createRoom = (roomName,token) =>{
-    const userId = 9;
+    
     return async (dispatch)=>{
         const addRoom = async ()=>{
-            const response = await axios.post('http://localhost:4000/room',{userId:userId,roomName:roomName},{headers:{Authorization:`Bearer ${token}`}});
+            const response = await axios.post('http://localhost:4000/room',{roomName:roomName},{headers:{Authorization:`Bearer ${token}`}});
         
             if(!response){
                 throw new Error("Room didn't created");

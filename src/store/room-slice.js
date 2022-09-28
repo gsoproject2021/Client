@@ -1,19 +1,33 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { act } from 'react-dom/test-utils';
 
 const roomsSlice = createSlice({
     name:'rooms',
-    initialState:{rooms:[],currentRoom:{roomId:0,users:[],events:[],messages:[],image:''}},
+    initialState:{publicRooms:[],rooms:[],currentRoom:{roomId:0,users:[],events:[],messages:[],image:''}},
     reducers:{
         loadRooms(state,action){
-            state.rooms = action.payload;
-            if(state.rooms.length>0){
+            
+                state.publicRooms = action.payload.publocRooms;
+                state.rooms = action.payload.roomsData.rooms;
                 state.currentRoom = state.rooms[0];
-            }
+            
+                state.currentRoom.users.forEach(user => {
+                    if(user.userId === action.payload.userId){
+                        user.isOnline = true
+                    }
+                })
+
         },
 
         setCurrentRoom(state,action){
-            let roomIndex  = state.rooms.findIndex(room => room.roomId === action.payload);
+            console.log(action.payload)
+            let roomIndex  = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
             state.currentRoom = state.rooms[roomIndex];
+            state.currentRoom.users.forEach(user => {
+                if(user.userId === action.payload.userId){
+                    user.isOnline = true
+                }
+            })
         },
 
         addRoom(state,action){
@@ -136,12 +150,40 @@ const roomsSlice = createSlice({
         },
 
         isUserOnline(state,action){
+            console.log(action.payload)
             let roomIndex = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
             let userIndex = state.rooms[roomIndex].users.findIndex(user => user.userId === action.payload.userId);
-            state.rooms[roomIndex].users[userIndex].isOnline = action.payload.isOnline;
+            console.log(userIndex)
+            state.rooms[roomIndex].users[userIndex].isOnline = true;
 
             if(state.currentRoom.roomId === action.payload.roomId){
-                state.currentRoom.users[userIndex].isOnline = action.payload.isOnline;
+                let userI = state.currentRoom.users.findIndex(user => user.userId === action.payload.userId);
+                state.currentRoom.users[userI].isOnline = true
+            }
+
+        },
+
+        userOffline(state,action){
+            state.rooms.forEach(room => {
+                room.users.forEach(user => {
+                    if(user.userId === action.payload){
+                        user.userId = false;
+                    }
+                })
+            })
+            state.currentRoom.users.forEach(user => {
+                if(user.userId === action.payload){
+                    user.userId = false
+                }
+            })
+        },
+
+        newMessage(state,action){
+            console.log(action.payload)
+            let roomIndex = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
+            state.rooms[roomIndex].messages = [...state.rooms[roomIndex].messages,action.payload]
+            if(state.currentRoom.roomId === action.payload.roomId){
+                state.currentRoom.messages = [...state.currentRoom.messages,action.payload];
             }
         }
 

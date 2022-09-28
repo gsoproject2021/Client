@@ -19,6 +19,10 @@ const userSlice = createSlice({
         changePicture(state,action){
             state.data.image = '';
             state.data.image = action.payload;
+        },
+        updateUser(state,action){
+            state.data = action.payload;
+            localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token}));
         }
     }
 });

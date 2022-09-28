@@ -3,6 +3,6 @@ import logoPic from '../images/logo3.png'
 
 export default function Logo(){
     return(
-        <Avatar variant="square" sx={{width:'80%',height:125,my:4}} src={logoPic}/>
+        <Avatar variant="square" sx={{width:'80%',height:'15%',my:4}} src={logoPic}/>
     );
 }

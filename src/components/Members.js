@@ -7,6 +7,9 @@ import AddUsers from './AddUsers';
 import User from './User';
 import {motion} from 'framer-motion/dist/framer-motion';
 import { useSelector } from 'react-redux';
+import { blueGrey } from '@mui/material/colors';
+
+
 const useStyles = makeStyles({
     root:{
         height:'50%',
@@ -16,11 +19,10 @@ const useStyles = makeStyles({
         display:'flex',
         justifyContent:'space-between',
         boxShadow:10,
-        backgroundColor:[colors.blueGray[700]],
-        padding:4,
-        borderRadius:8,
-        marginBottom:4,
-        color:colors.blueGray[300]
+        backgroundColor:[blueGrey['900']], 
+        padding:12,
+        color:blueGrey['A100'],
+        
     
     }
 })
@@ -45,14 +47,14 @@ export default function Members(){
         <Box className={classes.root}>
             <Box className={classes.title}>
                 <Typography variant="h5" gutterBottom >Members</Typography>
-                <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick={()=>setOpen(true)} >
+                <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={()=>setOpen(true)} >
                     <Add/>
                 </IconButton>
             </Box>
             <AddUsers openDialog={open} closeDialog={handleClose}/> 
             
             <Divider light />
-            <List sx={{bgcolor:'primary.light'}}>
+            <List sx={{color:blueGrey['A200']}}>
                 {currentRoom.users.map(showUser)}
             </List>
             

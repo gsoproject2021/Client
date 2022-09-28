@@ -1,28 +1,33 @@
 import { useEffect, useState } from "react";
 
-
-import { Box,AppBar,Grid,Toolbar,Typography,Tab,List, Button} from "@mui/material";
-import { Block, Delete } from "@mui/icons-material";
+import { createTheme,ThemeProvider} from "@mui/material/styles"
+import { Box,AppBar,Grid,Toolbar,Typography,Tab,List} from "@mui/material";
 import {TabContext,TabList,TabPanel } from "@mui/lab";
 import { makeStyles } from "@mui/styles";
-import Profile from "./Profile";
 import RoomManagement from "../components/RoomManagement";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllRooms, fetchAllUsers } from "../store/admin-actions";
 import ManagedUser from "../components/ManagedUser";
 import ManagedRoom from "../components/ManagedRoom";
 import UserProfile from "../components/UserProfile";
-
+import { blueGrey,grey } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme)=>{
     return{
         root:{
-            width:'100%'
+            width:'100%', 
+            backgroundColor: blueGrey[400]
         }
     }
 })
 
-
+const theme = createTheme({
+    palette:{
+        secondary:{
+            main: grey[900]
+        }
+    }
+})
 
 
 export default function Admin(props){
@@ -61,45 +66,51 @@ export default function Admin(props){
     
     const classes = useStyles();
     return(
-        <Box className={classes.root}>
-            <AppBar position="sticky" className={classes.root}>
-                <Toolbar>
-                    <Typography variant="h4">
-                        Management
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Grid container>
-                <Grid item lg={2}>
-                    <Box sx={{ width: '100%', typography: 'body1',borderRight: 1,borderRightColor:"disabled.text",height:"100%",my:2,px:1,boxShadow:3}}>
-                        
-                        <TabContext  value={value}>
-                            <Box sx={{ height:'100%', borderBottom: 1, borderColor: 'divider' }}>
-                                <TabList onChange={handleChange}  aria-label="lab API tabs example">
-                                    <Tab sx={{width:'50%'}} label="Users" value='users' />
-                                    <Tab sx={{width:'50%'}} label="Rooms" value='rooms' />  
-                                </TabList>
-                                <TabPanel value='users'>
-                                    <List>
-                                        {managedUsers.map(showUsers)}
-                                    </List>
-                                </TabPanel>
-                                <TabPanel value='rooms'>
-                                    <List>
-                                        {managedRooms.map(showRooms)}
-                                    </List>
-                                </TabPanel>
-                            </Box>
-                        </TabContext>
-                    </Box>
-                </Grid>
-                <Grid item lg={10}>
-                        
-                    {!manage?<RoomManagement/>:<UserProfile />}
-                </Grid>
-            </Grid>
-            
-        </Box>
+        <ThemeProvider theme={theme}>
+            <Box className={classes.root} sx={{height:'100vh'}}>
+                <AppBar position="sticky" className={classes.root} sx={{bgcolor:blueGrey[700]}}>
+                    <Toolbar>
+                        <Typography variant="h4">
+                            Management
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Grid container>
+                    <Grid item lg={2}>
+                        <Box sx={{ width: '100%',height:'93vh', typography: 'body1',borderRight: 1,borderRightColor:"disabled.text",px:1,boxShadow:3}}>
+                            
+                            <TabContext  value={value} >
+                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                    <TabList textColor="secondary" indicatorColor="secondary" onChange={handleChange}  aria-label="lab API tabs example">
+                                        <Tab sx={{width:'50%'}} label="Users" value='users' />
+                                        <Tab sx={{width:'50%'}} label="Rooms" value='rooms' />  
+                                    </TabList>
+                                    <TabPanel value='users' >
+                                        <List sx={{overflow: 'auto',height:750,width:275}}>
+                                                {managedUsers.map(showUsers)}     
+                                        </List>
+                                    </TabPanel>
+                                    <TabPanel value='rooms'>
+                                        
+                                            <List sx={{overflow: 'auto',height:750,width:275}}>
+                                            
+                                                {managedRooms.map(showRooms)}
+                                                
+                                            </List>
+                                        
+                                        
+                                    </TabPanel>
+                                </Box>
+                            </TabContext>
+                        </Box>
+                    </Grid>
+                    <Grid item lg={10}>
+                            
+                        {!manage?<RoomManagement/>:<UserProfile />}
+                    </Grid>
+                </Grid>   
+            </Box>
+        </ThemeProvider>
             
     );
 }

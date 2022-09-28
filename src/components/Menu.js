@@ -1,6 +1,5 @@
 import {NavLink} from 'react-router-dom';
 
-
 import { Button, Drawer,List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import {ContactPage, Home, Info, Logout, ManageAccounts, Person,} from '@mui/icons-material';
 import { makeStyles } from "@mui/styles";
@@ -12,12 +11,16 @@ import {motion} from 'framer-motion/dist/framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/user-actions';
 
+import { blueGrey } from '@mui/material/colors';
+
 const useStyles = makeStyles({
     root:{
         width:"17%",
         alignItems:'center',
+        
         '&.MuiPaper-root':{
-            backgroundColor:colors.blueGray[800],
+            backgroundColor: blueGrey['800'],
+            borderRightColor: blueGrey['500']
         },
         
     },
@@ -27,9 +30,9 @@ const useStyles = makeStyles({
     },
     btn:{
         '&.MuiListItemButton-root':{
-            color:colors.blueGray[200],
+            color:blueGrey['100'],
             '&:hover':{
-                backgroundColor:colors.blueGray[500],
+                backgroundColor:blueGrey[300],
                 
             },
             borderRadius:8
@@ -43,7 +46,7 @@ const useStyles = makeStyles({
     
 })
 
-export default function Menu(){
+export default function Menu({closeMenu}){
     const classes = useStyles()
     const user = useSelector(state => state.user);
     const dispatch = useDispatch()
@@ -51,22 +54,20 @@ export default function Menu(){
     const logoutHandler = () => {
         dispatch(logout());
     }
-    
+    const menuHandler = () => {
+        closeMenu(false);
+    }
     return(
         <Drawer 
             className={classes.root}
             anchor="left"
             variant="permanent"
-            classes={{paper:classes.root}}>
+            classes={{paper:classes.root}}
+            onClick={menuHandler}
+            >
             <Logo/>
-            <UserPic/>
-            {/* <Box sx={{mt:3}}>   
-                <NavLink className={classes.link} to='/main'><Button whileHover={{scale:1.3}} fullWidth component={motion.button} startIcon={<Home/>}>Home</Button></NavLink>
-                <NavLink className={classes.link} to='/main/profile'><Button fullWidth startIcon={<Person/>}>Profile</Button></NavLink>
-                <NavLink className={classes.link} to='/main/admin'><Button fullWidth startIcon={<ManageAccounts/>}>Management</Button></NavLink>
-                <NavLink className={classes.link} to='/main/contact'><Button fullWidth startIcon={<ContactPage/>}>Contact us</Button></NavLink>
-                <NavLink className={classes.link} to='/main/about'><Button fullWidth startIcon={<Info/>}>About</Button></NavLink>
-            </Box> */}
+            {/* <UserPic/> */}
+            
             <List>
 
                 <NavLink className={classes.link} to='/main'>

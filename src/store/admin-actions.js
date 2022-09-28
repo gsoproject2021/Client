@@ -42,23 +42,23 @@ export const updateUser = (user) => {
     }
 };
 
-export const deleteUser = (userId) => {
-        return async (dispatch) => {
-            const deleted = async () => {
-                const response = await axios.delete(`http://localhost:4000/user?${userId}`);
+// export const deleteUser = (userId) => {
+//         return async (dispatch) => {
+//             const deleted = async () => {
+//                 const response = await axios.delete(`http://localhost:4000/user?${userId}`);
             
-            if(!response){
-                throw new Error("something went wrong");
-            }
-        }
-        try{
-            await deleted();
-            dispatch(adminActions.deleteUser(userId))
-        }catch(err){
-            console.log(err);
-        }
-    }
-};
+//             if(!response){
+//                 throw new Error("something went wrong");
+//             }
+//         }
+//         try{
+//             await deleted();
+//             dispatch(adminActions.deleteUser(userId))
+//         }catch(err){
+//             console.log(err);
+//         }
+//     }
+// };
 
 export const fetchAllRooms = (token) => {
     return async (dispatch) => {
@@ -232,7 +232,7 @@ export const fetchUser = (userId) => {
     }
 };
 
-export const fetchRoom = (roomId,token) => {
+export const fetchRoom = (roomId,roomName,token) => {
     return async (dispatch) => {
         const getRoom = async () => {
             const response = await axios.get(`http://localhost:4000/roomDetails/${roomId}`,{headers:{Authorization:`Bearer ${token}`}});
@@ -246,11 +246,94 @@ export const fetchRoom = (roomId,token) => {
 
         try{
             const room = await getRoom();
+            console.log(room)
             dispatch(adminActions.loadManagedRoom(room));
         }catch(err){
             console.log(err);
         }
     }
+};
+
+export const updateUserByAdmin = (token,data) => {
+    return async (dispatch) => {
+        const updateUser = async () => {
+            const response = axios.patch("http://localhost:4000/updateUserByAdmin",{data},{headers:{Authorization:`Bearer ${token}`}});
+            if(!response){
+                throw new Error("somethig went wrong user didn't updated");
+            }
+
+            const user = response.data;
+            return user;
+        }
+        try{
+            const updatedUser = await updateUser();
+            dispatch(adminActions.loadManagedRoom(updatedUser.data));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+};
+
+export const changePasswordByAdmin = (token,data,userId) => {
+    let {password,confirmPassword} = data;
+    return async (dispatch) => {
+        const updatePass = async () => {
+            const response = await axios.patch("http://localhost:4000/changePasswordByAdmin/",{password,confirmPassword,userId},{headers:{Authorization:`Bearer ${token}`}});
+
+            if(!response){
+                throw new Error("something went wrong can't change password")
+            }
+            const result = response.data;
+            return result;
+        }
+        try{
+            const msg = await updatePass();
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 }
 
+export const deleteUser = (token,userId) => {
+    console.log(token,userId)
+    return async (dispatch) => {
+        const deleteAccount = async () => {
+            const response = await axios.delete(`http://localhost:4000/user/${userId}`,{headers:{Authorization:`Bearer ${token}`}})
+            if(!response) {
+                throw new Error("something went wrong can't delete account");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const msg = await deleteAccount();
+            dispatch(adminActions.deleteUser(userId));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+}
 
+export const blockUser = (token,userId,isBlocked) => {
+    return async (dispatch) => {
+        const block = async () => {
+            const response = await axios.patch('http://localhost:4000/blockUser',{userId,isBlocked},{headers:{Authorization:`Bearer ${token}`}});
+
+            if(!response){
+                throw new Error("something went wrong user status didn't changed");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const userData = await block();
+            dispatch(adminActions.loadManagedUser(userData.data))
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+}

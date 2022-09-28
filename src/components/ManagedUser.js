@@ -5,7 +5,7 @@ import { fetchUser } from "../store/admin-actions";
 
 
 
-export default function ManagedUser({userId,firstName}){
+export default function ManagedUser({userId,firstName,image}){
     
     const dispatch = useDispatch();
 
@@ -18,7 +18,7 @@ export default function ManagedUser({userId,firstName}){
 
         <ListItemButton onClick={fetchManagedUser}>
             <ListItemAvatar>
-                <Avatar/>
+                <Avatar src={{image}} />
             </ListItemAvatar>
             <ListItemText primary={firstName} />
         </ListItemButton>

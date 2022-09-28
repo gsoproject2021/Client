@@ -25,7 +25,8 @@ export default function Room({roomName,roomId,image}){
     
     const handleClick = ()=>{
         setIsSelected(roomId);
-        dispatch(roomsActions.setCurrentRoom(roomId));
+        let userId = user.userId;
+        dispatch(roomsActions.setCurrentRoom({roomId,userId}));
         console.log(rooms);
     }
   
@@ -70,8 +71,7 @@ export default function Room({roomName,roomId,image}){
         })
 
         socket.on(`is_user_online${roomId}`,socket => {
-            console.log(socket);
-            console.log('ok')
+            
             dispatch(roomsActions.isUserOnline(socket.userData))
             
         })
@@ -90,7 +90,7 @@ export default function Room({roomName,roomId,image}){
     
     return(
         <React.Fragment>
-            <Divider />
+            <Divider  />
                 <ListItemButton onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
                     <ListItemIcon>
                         <IconButton onClick={() => setAddDialog(true)}>

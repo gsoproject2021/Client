@@ -1,5 +1,5 @@
 import { makeStyles } from "@mui/styles";
-
+import { blueGrey,grey } from "@mui/material/colors";
 import { Grid } from "@mui/material";
 import Rooms from "../components/Rooms";
 import Events from "../components/Events";
@@ -20,23 +20,24 @@ const useStyles = makeStyles({
     root:{
         marginTop:8,
         marginBottom:4,
-        height:940,
+        height:'100vh',
+        width:'100%'
         
     },
     rooms:{
-        height:"100%",
-        backgroundColor:colors.blueGray[600],
-        borderRight:'2px',
-        borderRightColor:colors.blueGray[300],
-        boxShadow:'8px 8px 8px 0px'
+        
+        backgroundColor:blueGrey['900'],
+        borderRightColor:blueGrey[400],
+        
     },
     chat:{
         
     },
     events:{
-        height:"100%",
         
         
+        borderLeft:3,
+        borderLeftColor:'white'
     }
 });
 
@@ -51,6 +52,8 @@ export default function Main(){
     const [newRoom,setNewRoom] = useState();
 
     
+    
+
     socket.on(`rooms_${user.userId}`, socket => {
         if(socket.action === 'add' ){
             dispatch(roomsActions.addRoom(socket.data));
@@ -68,14 +71,14 @@ export default function Main(){
      
     
     return(
-        <Grid component={motion.div} container item xs={10} className={classes.root} >
-            <Grid item lg={3} md={3} xs={12} className={classes.rooms} sx={{borderRight:2, borderRightColor:colors.blueGray[700]}} >    
+        <Grid component={motion.div} container item xs={12} className={classes.root} sx={{height:'100vh'}} >
+            <Grid item lg={2} md={3} xs={12} className={classes.rooms}  >    
                 <Rooms/>
             </Grid>
-            <Grid className={classes.chat} item lg={6} md={3} xs={12} sx={{bgcolor:colors.blueGray[600]}}>
+            <Grid className={classes.chat} item lg={8} md={3} xs={12} sx={{bgcolor:blueGrey[600],borderRight:2,borderRightColor:blueGrey[500],borderLeft:2,borderLeftColor:blueGrey[500]}}>
                  <ChatWindow/> 
             </Grid>
-            <Grid item lg={3} md={3} xs={12} sx={{bgcolor:colors.blueGray[600]}} className={classes.events}>
+            <Grid item lg={2} md={3} xs={12} sx={{bgcolor:blueGrey[900]}} className={classes.events}>
                 <Members/> 
                 <Events/>
             </Grid>

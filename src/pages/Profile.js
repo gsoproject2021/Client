@@ -1,85 +1,100 @@
 import {  useState } from 'react';
-import {Box,Typography,Grid,TextField,FormControl,FormLabel,RadioGroup,FormControlLabel,Radio,Button,Checkbox} from '@mui/material';
+import {Box,Typography,Grid,TextField,FormControl,FormLabel,RadioGroup,FormControlLabel,Radio,Button} from '@mui/material';
+import UserPic from '../components/UserPic';
+import Logo from '../components/Logo';
+import {  green, indigo } from '@mui/material/colors';
+import NewTextField from '../components/NewTextField';
+import * as yup from 'yup';
+import { useFormik } from 'formik'
+import ChangePassword from '../components/ChangePassword';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '../store/user-actions';
 
-
+let schema = yup.object().shape({
+    firstName: yup.string().required("First name cant be empty"),
+    lastName: yup.string().required("Last name cant be empty"),
+    email: yup.string().email().required(),
+    birthday: yup.date()
+                 .required()
+                 .test("birthday", "You must be 18 or older", function(birthdate) {
+                    const cutoff = new Date();
+                    cutoff.setFullYear(cutoff.getFullYear() - 18);      
+                    return birthdate <= cutoff;
+                }),
+});
 
 
 export default function Profile({userDetails}){
-    const {firstName,lastName,email,gender} = userDetails;
-    // const user = useSelector(state => state.admin.managedUser);
-    // gender,isAdmin,isAdvertiser
-    // console.log(user);
-    const [first,setFirst] = useState(firstName);
-    const [last,setLast] = useState(lastName);
-    const [mail,setMail] = useState(email);
-    const [userGender,setUserGender] = useState(gender);
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.user.token)
+    const {firstName,lastName,email,birthday} = userDetails;
+    const formik = useFormik({
+        initialValues: {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            birthday: birthday
+            
+        },
+        validationSchema: schema,
+        onSubmit: data => {
+            console.log(JSON.stringify(data));
+            dispatch(updateUser(data,token))
+        },
+        
+    })
+
+
     
-    // const [userGender,setUserGender] = useState(gender);
-    // const [admin,setAdmin] = useState(isAdmin);
-    // const [advertiser,setAdvertiser] = useState(isAdvertiser);
-
-    // const [email,setEmail] = useState(user.email);
-    // const [birthday,setBirthday] = useState(user.birthday);
-    // const [gender,setGender] = useState(user.gender);
-    // const [isAdmin,setIsAdmin] = useState(user.isAdmin);
-    // const [isAdvertiser,setIsAdvertiser] = useState(user.isAdvertiser);
-    // const [isBlocked,setIsBlocked] = useState(user.isBlocked);
-    // const [password,setPassword] = useState('');
-    // const [confPassword,setConfPassword] = useState('') 
-
-    // useEffect(()=>{
-    //     setFirstName(user.firstName);
-    //     setLastName(user.lastName);
-    //     setEmail(user.email);
-    //     setGender(user.gender)
-    // },[user]);
-    // console.log(user);
-    // // {
-    //     userId: result.UserID,
-    //     email: result.Email,
-    //     firstName: result.FirstName,
-    //     lastName: result.LastName,
-    //     birthday: result.Birthday,
-    //     isAdvertiser: result.IsAdvertiser,
-    //     isAdmin: result.IsAdmin,
-    //     IsBlocked: result.IsBlocked,
-    //     gender: result.Gender,
-    //     phone: result.Phone
-    // }
-
     return(
             
-              <Box sx={{ width:'50%', mx: 'auto', my: 8,px:10,py:4}}>
-                <form>
+              <Box sx={{ height:'100vh', width:'40%', mx: 'auto',px:10,color:'black'}}>
+                <form onSubmit={formik.handleSubmit} >
                     <Grid>
-                    <Typography sx={{my:8}} variant="h3" align='center'>{first} {last} </Typography>
+                        <Box sx={{width:'50%',px:'25%'}}>
+                            <Logo/>
+                        </Box>
+                        <Box sx={{display:'flex'}}>
+                            <UserPic/>
+                            <Typography sx={{my:8,mx:'22%'}} variant="h4" align='center'>{firstName} {lastName} </Typography>
+                            <ChangePassword/>
+                        </Box>
+                    
                     <Grid sx={{ display: "flex", my: 2 }}>
-                        <TextField
+                        <NewTextField
+                        
                         sx={{ mr: 1 }}
                         fullWidth
                         label="First name"
                         name="firstName"
-                        value={first}
+                        value={formik.values.firstName}
+                        onChange={formik.handleChange}
+                        error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                        helperText={formik.touched.firstName && formik.errors.firstName}
                         />
-                        <TextField
+                        <NewTextField
                         sx={{ ml: 1 }}
                         fullWidth
                         label="Last name"
                         name="lastName"
-                        value={last}
+                        value={formik.values.lastName}
+                        onChange={formik.handleChange}
+                        error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                        helperText={formik.touched.lastName && formik.errors.lasttName}
                         />
                     </Grid>
-                    <Grid
+                    {/* <Grid
                         sx={{ display: "flex", pl: 2 }}
                     >
                         <FormControl sx={{alignContent:"center"}}>
-                        <FormLabel sx={{ display: "flex" }}>Gender</FormLabel>
+                        <FormLabel sx={{ display: "flex" , color:'black'}}>Gender</FormLabel>
                         <RadioGroup
                             row
                             aria-labelledby="gender-radio-buttons-group-label"
                             name="row-radio-buttons-group"
                         >
                             <FormControlLabel
+                            sx={{color:'black'}}
                             value="female"
                             control={<Radio />}
                             label="Female"
@@ -95,32 +110,58 @@ export default function Profile({userDetails}){
                         control={<Checkbox  />}
                         label="is Advertiser?"
                         /> */}
-                    </Grid>
+                    {/* </Grid> */} 
             
-                    <Grid sx={{ my: 2 }}>
-                        <TextField fullWidth label="Email" name="email" value={mail} />
+                    <Grid sx={{ my: 2,display:'flex' }}>
+                        <NewTextField 
+                         sx={{mr:1}}
+                         fullWidth 
+                         label="Email" 
+                         name="email" 
+                         value={formik.values.email}
+                         onChange={formik.handleChange}
+                         error={formik.touched.email && Boolean(formik.errors.email)}
+                         helperText={formik.touched.email && formik.errors.email}
+                          />
+                         <NewTextField 
+                             sx={{ml:1}} 
+                             type="date"
+                             fullWidth 
+                             name="birthday"
+                             value={formik.values.birthday}
+                             onChange={formik.handleChange}
+                             error={formik.touched.birthday && Boolean(formik.errors.birthday)}
+                             helperText={formik.touched.birthday && formik.errors.birthday }/>
                     </Grid>
-                    <Grid sx={{ display: "flex", my: 2 }}>
-                        <TextField
+                    {/* <Grid sx={{ display: "flex", my: 2 }}>
+                        <NewTextField
                         sx={{ mr: 1 }}
                         fullWidth
                         label="Password"
                         name="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                        helperText={formik.touched.password && formik.errors.password}
                         />
-                        <TextField
+                        <NewTextField
                         sx={{ ml: 1 }}
                         fullWidth
                         label="Confirm password"
-                        name="password"
+                        name="confirmPassword"
+                        value={formik.values.confirmPassword}
+                        onChange={formik.handleChange}
+                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                         />
-                    </Grid>
+                    </Grid> */}
                   </Grid>
-                </form>
-                <Box sx={{px:'35%',mt:15}}>
-                    <Button  fullWidth variant="contained">Update details</Button>
-                </Box>
-                
+                    <Box sx={{px:'35%',mt:10}}>
+                        <Button type='submit' sx={{bgcolor:indigo[700]}} fullWidth variant="contained">Update details</Button>
+                    </Box>
+                </form> 
               </Box>
+            
             
     );
 }
@@ -142,10 +183,10 @@ export default function Profile({userDetails}){
         //         <form>
         //             <Grid container spacing={3} className="px-8">
         //                 <Grid item xs={12} sm={6} >
-        //                     <TextField variant="filled" size="medium" name="firstname" label='First name' fullWidth value={firstName} onChange={(event) => setFirstName(event.target.value) }/>
+        //                     <NewTextField variant="filled" size="medium" name="firstname" label='First name' fullWidth value={firstName} onChange={(event) => setFirstName(event.target.value) }/>
         //                 </Grid>
         //                 <Grid item xs={12} sm={6} >
-        //                     <TextField variant="filled" name="lastname" label='Last name' fullWidth value={lastName}/>
+        //                     <NewTextField variant="filled" name="lastname" label='Last name' fullWidth value={lastName}/>
         //                 </Grid>
         //                 <Grid item xs={12} sm={6}>
         //                     <FormControl className="flex" >
@@ -157,17 +198,17 @@ export default function Profile({userDetails}){
         //                         </FormControl>
         //                 </Grid>
         //                 <Grid item xs={12} sm={6}>
-        //                     <TextField type="date" variant="filled" name="birthday" fullWidth value={birthday}/>
+        //                     <NewTextField type="date" variant="filled" name="birthday" fullWidth value={birthday}/>
         //                 </Grid>
         //                 <Grid item xs={12}>
-        //                     <TextField variant="filled" name="email" label="Email" fullWidth value={email}/>
+        //                     <NewTextField variant="filled" name="email" label="Email" fullWidth value={email}/>
         //                 </Grid>
                         
         //                 <Grid item xs={12}>
-        //                     <TextField variant="filled" name="password" label="Password" fullWidth value={password}/>
+        //                     <NewTextField variant="filled" name="password" label="Password" fullWidth value={password}/>
         //                 </Grid>
         //                 <Grid item xs={12}>
-        //                     <TextField variant="filled" name="password" label="Confirm Password" fullWidth value={confPassword}/>
+        //                     <NewTextField variant="filled" name="password" label="Confirm Password" fullWidth value={confPassword}/>
         //                 </Grid>
         
         //                 <Grid item xs={12}>

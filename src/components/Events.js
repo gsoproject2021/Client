@@ -7,7 +7,7 @@ import {motion} from 'framer-motion/dist/framer-motion';
 import AddEvent from "./AddEvent";
 import Event from '../components/Event';
 import { useSelector } from "react-redux";
-
+import { blueGrey,grey } from "@mui/material/colors";
 
 const useStyles = makeStyles({
     root:{
@@ -18,10 +18,8 @@ const useStyles = makeStyles({
         display:'flex',
         justifyContent:'space-between',
         boxShadow:10,
-        backgroundColor:[colors.blueGray[700]],
-        padding:4,
-        borderRadius:8,
-        marginBottom:4,
+        backgroundColor:blueGrey[900],
+        padding:12, 
         color:colors.blueGray[300]
     
     }
@@ -64,8 +62,8 @@ export default function Events(){
     }
 
     return(
-        <Box className={classes.root}>
-            <Box className={classes.title}>
+        <Box className={classes.root} sx={{borderTop:1,borderTopColor:blueGrey[500],backgroundColor:blueGrey[900]}}>
+            <Box className={classes.title} >
                  <Typography variant="h5" gutterBottom >Events</Typography>
                  <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = {() => setAddEvent(true)} >
                     <Add/>
@@ -92,8 +90,7 @@ export default function Events(){
                 </DialogContent>
             </Dialog>
             
-            <Divider light />
-            <List sx={{bgcolor:'primary.light'}}>
+            <List sx={{bgcolor:blueGrey['900']}}>
                 {currentRoom.events.map(showEvent)}
                 
             </List>

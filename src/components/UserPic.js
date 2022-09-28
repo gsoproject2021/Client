@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../store/user-slice";
 import AddPicture from "./AddPicture";
 import logo from '../images/logo192.png';
-
+import { blueGrey } from "@mui/material/colors";
 export default function UserPic(){
 
     const [count,setCount] = useState(0);
@@ -38,7 +38,7 @@ export default function UserPic(){
                 overlap="circular"
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 badgeContent={    
-                    <IconButton onClick={() => setAddDialog(true)} sx={{color:'gray'}} aria-label="upload picture" component="span">
+                    <IconButton onClick={() => setAddDialog(true)} sx={{color:blueGrey['A100']}} aria-label="upload picture" component="span">
                         <PhotoCamera />
                     </IconButton>
                     

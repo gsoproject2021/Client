@@ -3,7 +3,7 @@ import { Dialog,DialogTitle,DialogContent,ListItemText,List,ListItem,ListItemBut
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUsersToRoom } from '../store/cache-actions';
-
+import { blueGrey } from '@mui/material/colors';
 
 
 
@@ -57,17 +57,16 @@ export default function AddUsers({openDialog,closeDialog}){
 
     return(
         <Dialog
-        
-        open={openDialog}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-            <DialogTitle id="alert-dialog-title">
+          
+          open={openDialog}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+            <DialogTitle sx={{bgcolor:blueGrey[100]}} id="alert-dialog-title">
             <Typography variant='h4' component={'span'} >Users</Typography>
             </DialogTitle>
-            <DialogContent>
-            <List dense sx={{ width: '100%',height: 500, maxWidth: 360, bgcolor: 'background.paper' ,overflow: 'auto' }}>
+            <DialogContent sx={{bgcolor:blueGrey[100]}} >
+            <List dense sx={{ width: '100%',height: 500, maxWidth: 360 ,overflow: 'auto' }}>
         {users.map((user) => {
         
         return (

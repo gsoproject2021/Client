@@ -1,6 +1,7 @@
 import {Box, TextField, Typography,Button} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import {motion,AnimatePresence} from 'framer-motion/dist/framer-motion';
+import Logo from "../components/Logo";
 
 
 
@@ -20,29 +21,27 @@ const containerVariants = {
     }
 }
 
-const useStyles = makeStyles({
-    root:{
-        marginLeft:'20%',
-        marginRight:'20%',
-        marginTop:'7.5%'
-    }
-})
+
 
 export default function ContactUs(){
-    const classes = useStyles();
+    
     return(
         <AnimatePresence exitBeforeEnter>
-            <Box className={classes.root}
+            <Box 
             component={motion.div}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            exit="exit"  >
+            exit="exit"
+            sx={{height:'100vh',mx:'20%'}}  >
+                <Box sx={{ width:'50%',px:'25%'}}>
+                    <Logo/>
+                </Box>
                 <Typography align="center" variant="h3" sx={{mb:4}}>Contact us</Typography>
                 <TextField fullWidth label="Subject" sx={{mb:3}} />
                 <TextField fullWidth label="Email" sx={{mb:3}} />
                 <TextField fullWidth placeholder="Type a messeage" sx={{mb:2}} multiline minRows={10} />
-                <Box sx={{px:'35%',pt:'5%'}}>
+                <Box sx={{px:'35%',pt:'2%'}}>
                     <Button variant="contained" size="large" fullWidth>Send</Button>
                 </Box>
             </Box>

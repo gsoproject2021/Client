@@ -7,7 +7,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { removeEvent } from "../store/cache-actions";
 import { cacheActions } from "../store/cache-slice";
 import EditEvent from "./EditEvent";
-
+import { blueGrey,indigo } from "@mui/material/colors";
 
 
 export default function Event({eventId,subject,date,hour,description}){
@@ -39,7 +39,7 @@ export default function Event({eventId,subject,date,hour,description}){
     }
     
     return(
-                <ListItemButton onClick={handleClick}  onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} >
+                <ListItemButton sx={{color:blueGrey['A100'],backgroundColor:indigo['700']}} onClick={handleClick}  onMouseEnter={() => setActions(true)} onMouseLeave={() => setActions(false)} >
                     <ListItemText sx={{borderRadius:20}} >
                         <Box sx={{display:'flex',justifyContent:'space-between'}}>  
                             <Typography variant='h6' gutterBottom>   
@@ -51,10 +51,10 @@ export default function Event({eventId,subject,date,hour,description}){
                             </Typography>
                             {actions &&
                             <Box>
-                                <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = {() => setOpenEditDialog(true)} >
+                                <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = {() => setOpenEditDialog(true)} >
                                     <Edit/>
                                 </IconButton> 
-                                <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = { deleteEvent } >
+                                <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = { deleteEvent } >
                                     <DeleteForever/>
                                 </IconButton>
                             </Box>

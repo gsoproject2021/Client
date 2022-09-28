@@ -1,7 +1,8 @@
 import {Box, CardMedia,Card, CardContent, Typography} from "@mui/material";
+import { blueGrey } from "@mui/material/colors";
 import { makeStyles } from "@mui/styles";
 import {motion} from 'framer-motion/dist/framer-motion';
-
+import Logo from "../components/Logo";
 const containerVariants = {
     hidden:{
         opacity:0,
@@ -28,11 +29,11 @@ const useStyle = makeStyles({
     cards:{
         display:'flex',
         justifyContent:'space-between',   
-        marginLeft:'10%',
-        marginRight:'10%'
+        
     },
     card:{
-        margin:'5%'
+        margin:'5%',
+        backgroundColor:blueGrey[300]
     }
 })
 
@@ -44,8 +45,12 @@ export default function About(){
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        exit="exit" >
-            <Box className={classes.title}>
+        exit="exit"
+        sx={{height:'100vh',px:'20%'}} >
+            <Box sx={{ width:'50%',px:'25%'}}>
+                <Logo/>
+            </Box>
+            <Box >
                 <Typography align="center" variant="h3" gutterBottom >About GSO</Typography>
                 <Typography align="center" variant="h6">sdfsdfsdfdddddddddddddddddddddddddddddddddd
                 sdfsdfsdfddddddddddddddddddddddddddddddddddfdgdfgdfgdfg

@@ -7,17 +7,17 @@ import { fetchRoom } from "../store/admin-actions";
 export default function ManagedRoom({roomId,roomName}){
 
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
+    const token = useSelector(state => state.user.token);
     const [isSelected,setIsSelected] = useState(-1);
 
     const handleClick = () => {
         setIsSelected(roomId);
-        dispatch(fetchRoom(roomId,user.token))
+        dispatch(fetchRoom(roomId,roomName,token))
     }
 
 
     return(    
-        <ListItemButton onClick ={handleClick} selected={isSelected===roomId} >
+        <ListItemButton onClick ={handleClick}  >
             <ListItemIcon>
                 <Avatar></Avatar>
             </ListItemIcon>
