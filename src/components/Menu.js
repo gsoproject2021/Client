@@ -1,12 +1,12 @@
 import {NavLink} from 'react-router-dom';
 
-import { Button, Drawer,List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import {ContactPage, Home, Info, Logout, ManageAccounts, Person,} from '@mui/icons-material';
+import {  Drawer,List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {ContactPage, Home, Info,  ManageAccounts, Person,} from '@mui/icons-material';
 import { makeStyles } from "@mui/styles";
 
 import Logo from "./Logo";
-import UserPic from "./UserPic";
-import colors from '../utils/colors';
+
+
 import {motion} from 'framer-motion/dist/framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/user-actions';
@@ -51,9 +51,7 @@ export default function Menu({closeMenu}){
     const user = useSelector(state => state.user);
     const dispatch = useDispatch()
     
-    const logoutHandler = () => {
-        dispatch(logout());
-    }
+   
     const menuHandler = () => {
         closeMenu(false);
     }
@@ -113,7 +111,7 @@ export default function Menu({closeMenu}){
                 </NavLink>
             </List>
             
-            <Button onClick={logoutHandler} sx={{mt:25,color:colors.blueGray[200],backgroundColor:'error.main'}} classes={{root:classes.logout}} endIcon={<Logout/>}>Logout</Button>
+            {/* <Button onClick={logoutHandler} sx={{mt:25,color:colors.blueGray[200],backgroundColor:'error.main'}} classes={{root:classes.logout}} endIcon={<Logout/>}>Logout</Button> */}
             
                
         </Drawer>

@@ -1,22 +1,19 @@
 import {useState} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
+
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
+
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch,useSelector } from 'react-redux';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import * as yup from 'yup'
 import { useFormik } from 'formik';
 import { changePassword } from '../store/user-actions';
 
 
 let schema = yup.object().shape({
-    password: yup.string().required().
-                            matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,"Password must contain a-z,A-Z,0-9 chars").
-                            min(8,"Password Length must be 8-16 chars").
-                            max(16,"Password Length must be 8-16 chars"),
+    password: yup.string().required().matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,"Password must contain a-z,A-Z,0-9 chars").min(8,"Password Length must be 8-16 chars").max(16,"Password Length must be 8-16 chars"),
     confirmPassword: yup.string().oneOf([yup.ref("password"),null]).required("passwords not equal try again"),
 })
 

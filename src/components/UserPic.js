@@ -1,18 +1,18 @@
-import { useEffect,useRef, useState } from "react";
-import { Avatar,Input,IconButton,Box, InputLabel, Badge } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Avatar,IconButton,Box,  Badge } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../store/user-slice";
+import {  useSelector } from "react-redux";
+
 import AddPicture from "./AddPicture";
-import logo from '../images/logo192.png';
+
 import { blueGrey } from "@mui/material/colors";
 export default function UserPic(){
 
-    const [count,setCount] = useState(0);
+    
     const [pic,setPic] = useState('');
     const user = useSelector(state => state.user);
-    const [isPic,setIsPic] = useState(false);
+    
     
     const [addDialog,setAddDialog] = useState(false);
 

@@ -3,17 +3,19 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
     name: 'user',
-    initialState:{data:{},token:''},
+    initialState:{data:{},token:'',expireIn:0,message:""},
     reducers:{
         setUser(state,action){
             state.data = action.payload.data;
             state.token = action.payload.token;
-            localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token}));
+            state.expireIn = action.payload.expireIn;
+            localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token,expireIn:state.expireIn}));
             
         },
         logout(state,action){
             state.data = {};
             state.token = '';
+            state.expireIn = 0;
             localStorage.removeItem('data');
         },
         changePicture(state,action){
@@ -23,6 +25,9 @@ const userSlice = createSlice({
         updateUser(state,action){
             state.data = action.payload;
             localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token}));
+        },
+        setMessage(state,action){
+            state.message = action.payload;
         }
     }
 });

@@ -1,7 +1,6 @@
 
 import {makeStyles} from "@mui/styles"
 import { blueGrey } from "@mui/material/colors";
-import Menu from "../components/Menu";
 import { Box } from "@mui/system";
 import Admin from "../pages/Admin";
 import Profile from "../pages/Profile";

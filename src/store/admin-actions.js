@@ -245,8 +245,8 @@ export const fetchRoom = (roomId,roomName,token) => {
         }
 
         try{
-            const room = await getRoom();
-            console.log(room)
+            let temp = await getRoom();
+            let room = {...temp,roomName,roomId}
             dispatch(adminActions.loadManagedRoom(room));
         }catch(err){
             console.log(err);

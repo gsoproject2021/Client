@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { Box,Grid,Typography,TextField,FormControl,FormLabel,RadioGroup,FormControlLabel,Radio,Button,Checkbox, Avatar } from "@mui/material"
+import { useEffect } from "react";
+import { Box,Grid,Typography,FormControl,FormLabel,RadioGroup,FormControlLabel,Radio,Button,Checkbox, Avatar } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux";
-import { blueGrey, green } from "@mui/material/colors";
+import { blueGrey} from "@mui/material/colors";
 import NewTextField from "./NewTextField";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import ChangePasswordByAdmin from "./ChangePasswordByAdmin";
-import { updateUserByAdmin,deleteUser, blockUser } from "../store/admin-actions";
+import { updateUserByAdmin } from "../store/admin-actions";
 
 
 let schema = yup.object().shape({

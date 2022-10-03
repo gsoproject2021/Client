@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Button,Dialog,DialogTitle,DialogActions,DialogContent,DialogContentText,TextField } from "@mui/material"
+import { Button,Dialog,DialogTitle,DialogActions,DialogContent,TextField } from "@mui/material"
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from "react-redux";
+import { addPublicRoom } from "../store/rooms-actions";
 
 
 const schema = yup.object().shape({
@@ -12,6 +13,7 @@ const schema = yup.object().shape({
 export default function AddPublicRoom (){
     const token = useSelector(state => state.user.token);
     const dispatch = useDispatch();
+    
     const [open, setOpen] = useState(false);
     const  formik  = useFormik({
         initialValues:{
@@ -19,7 +21,7 @@ export default function AddPublicRoom (){
         },
         validationSchema: schema,
         onSubmit: data => {
-            console.log(data)
+            dispatch(addPublicRoom(token,data))
             setOpen(false)
         }
     })
@@ -56,7 +58,7 @@ export default function AddPublicRoom (){
                 </DialogContent>
                 <DialogActions>
                 <Button variant="contained" color="error" size="small" onClick={handleClose}>Cancel</Button>
-                <Button type="submit" variant="contained" color="success" size="small" >Add</Button>
+                <Button type="submit" variant="contained" color="success" size="small" >Submit</Button>
                 </DialogActions>
             </form>
         </Dialog>

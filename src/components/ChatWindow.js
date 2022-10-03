@@ -1,7 +1,7 @@
-import {Box, Typography,IconButton, TextField, Button, CardContent,Card, Avatar} from "@mui/material";
+import {Box, Typography,IconButton, TextField, Button} from "@mui/material";
 import { ExitToApp,  SendOutlined } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
-import colors from "../utils/colors";
+
 import { useDispatch, useSelector } from "react-redux";
 import Message from "./Message";
 import { useContext, useEffect, useState } from "react";
@@ -71,9 +71,9 @@ export default function ChatWindows(){
         <Box sx={{width:'100%',height:'100vh',bgcolor:blueGrey[800]}}>
             <Box  className={classes.title}>
                 <Typography variant="h4" gutterBottom> {currentRoom.roomName} </Typography>
-                <IconButton sx={{color:blueGrey[100]}}>
+                {!user.isAdvertiser?<IconButton sx={{color:blueGrey[100]}}>
                     <ExitToApp/>
-                </IconButton>
+                </IconButton>:null}
             </Box>
             
             <Box className={classes.messages}>

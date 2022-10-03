@@ -1,10 +1,12 @@
-import {Grid,Typography,TextField,Button,FormControlLabel,Box,Checkbox,Avatar} from '@mui/material';
+import {Grid,Typography,TextField,Button,Box,Avatar} from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import {motion,AnimatePresence} from 'framer-motion/dist/framer-motion';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { login } from '../store/user-actions';
-import { useCallback, useState } from 'react';
+
 import logopic from '../images/logo1.jpeg'
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 
 const containerVariants = {
     hidden:{
@@ -22,26 +24,27 @@ const containerVariants = {
     }
 }
 
+const schema = yup.object().shape({
+    email: yup.string().email().required('Login must be an email'),
+    password: yup.string().required("password can't be empty"),
+})
 
 export default function Login(){
-    
-    
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
 
     const dispatch = useDispatch();
-
-    const emailChangeHandler = (event) => {
-        
-        setEmail(event.target.value);
-    }
     
-    const loginHandle = (event) => {
-        event.preventDefault();
-        dispatch(login(email,password));
-        
-        
-    }
+    const formik = useFormik({
+        initialValues:{
+            email:"",
+            password:""
+        },
+        validationSchema:schema,
+        onSubmit: data => {
+            const { email,password } = data;
+            console.log(data);
+            dispatch(login(email,password));
+        }
+    })
 
     return(
         <AnimatePresence exitBeforeEnter>
@@ -57,17 +60,19 @@ export default function Login(){
                         <Typography sx={{mb:5}}  align="center" component="h1" variant="h3">
                             Login
                         </Typography>
-                        <form   onSubmit={loginHandle} >
+                        <form   onSubmit={formik.handleSubmit} >
                             <TextField
                             variant='filled'
                             margin="normal"
                             fullWidth
-                            id="email"
                             label="Email Address"
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={emailChangeHandler}
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email }
                             />
                             <TextField
                             variant='filled'
@@ -76,16 +81,13 @@ export default function Login(){
                             name="password"
                             label="Password"
                             type="password"
-                            id="password"
                             autoComplete="current-password"
-                            onChange={(event) => {setPassword(event.target.value)}}
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password }
                             />
-                            <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                            />
-                            
-                                <Button
+                            <Button
                                 sx={{px:'20%'}}
                                 size="large"
                                 type="submit"
@@ -96,7 +98,7 @@ export default function Login(){
                                 whileHover={{scale:1.1}}
                                 >
                                 Sign In
-                                </Button>
+                            </Button>
                             
                             
                             <Grid container>

@@ -1,4 +1,4 @@
-import {Box,Divider,Typography,IconButton,List,Dialog,DialogContent,DialogTitle,TextField,Button} from "@mui/material";
+import {Box,Typography,IconButton,List,Dialog,DialogContent,DialogTitle,TextField,Button} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import {motion} from 'framer-motion/dist/framer-motion';
 import AddEvent from "./AddEvent";
 import Event from '../components/Event';
 import { useSelector } from "react-redux";
-import { blueGrey,grey } from "@mui/material/colors";
+import { blueGrey} from "@mui/material/colors";
 
 const useStyles = makeStyles({
     root:{
@@ -25,26 +25,12 @@ const useStyles = makeStyles({
     }
 })
 
-// const containerVariants = {
-//     hidden:{
-//         opacity:0,
-//         x:200
-//     },
-//     visible:{
-//         opacity:1,
-//         x:0,
-//         delay:3
-//     },
-//     exit:{
-//         opacity:0,
-//         x:-200
-//     }
-// }
+
 
 export default function Events(){
 
     const currentRoom = useSelector(state => state.rooms.currentRoom);
-    
+    const user = useSelector(state => state.user.data);
     const classes = useStyles();
     // const [addMenu,setAddMenu] = useState(false);
     const [addEvent,setAddEvent] = useState(false);
@@ -65,9 +51,9 @@ export default function Events(){
         <Box className={classes.root} sx={{borderTop:1,borderTopColor:blueGrey[500],backgroundColor:blueGrey[900]}}>
             <Box className={classes.title} >
                  <Typography variant="h5" gutterBottom >Events</Typography>
-                 <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = {() => setAddEvent(true)} >
+                 {!user.isAdvertiser?<IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[300]}} onClick = {() => setAddEvent(true)} >
                     <Add/>
-                 </IconButton >     
+                 </IconButton >:null}     
             </Box>
             
             <AddEvent addEvent={addEvent} dialogState={addDialog} /> 
@@ -90,7 +76,7 @@ export default function Events(){
                 </DialogContent>
             </Dialog>
             
-            <List sx={{bgcolor:blueGrey['900']}}>
+            <List sx={{bgcolor:blueGrey['900'],height:375,overflow:'auto'}}>
                 {currentRoom.events.map(showEvent)}
                 
             </List>

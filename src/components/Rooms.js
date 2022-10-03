@@ -1,9 +1,9 @@
-import { Edit, MoreVert,Add, DeleteForever } from "@mui/icons-material";
-import {Box, Divider, Typography,List, ListItemButton, ListItemIcon, Avatar, ListItemText, IconButton, Fade} from "@mui/material";
+import { Edit,Add, DeleteForever } from "@mui/icons-material";
+import {Box, Divider, Typography,List,  IconButton} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useState,useEffect, useContext} from "react";
 import {motion} from 'framer-motion/dist/framer-motion';
-import colors from "../utils/colors";
+
 import {cyan,teal,blueGrey,red,pink,purple,deepOrange,deepPurple,indigo,blue,lightBlue,green,lightGreen,lime,yellow,amber,orange,brown} from '@mui/material/colors';
 import Room from "./Room";
 import AddRoom from "./AddRoom";
@@ -48,33 +48,13 @@ const containerVariants = {
 
 const randomColors = [cyan[500],teal[500],red[500],pink[500],purple[500],deepOrange[500],deepPurple[500],indigo[500],blue[500],lightBlue[500],green[500],lightGreen[500],lime[500],yellow[500],amber[500],orange[500],brown[500]];
 
-const publicRooms = [
-    {
-        roomId:1,
-        roomName:"Test",
-        isManaged:true,
-    },
-    {
-        roomId:2,
-        roomName:"Sport",
-        isManaged:false,
-    },
-    {
-        roomId:3,
-        roomName:"Food",
-        isManaged:false,
-    },
-    {
-        roomId:4,
-        roomName:"Movies",
-        isManaged:false,
-    },
-]
+
 
 export default function Rooms(){
     const socket = useContext(SocketContext);
     const user = useSelector(state => state.user);
     const rooms = useSelector(state => state.rooms.rooms);
+    const publicRooms = useSelector(state => state.rooms.publicRooms)
     const current = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -88,7 +68,8 @@ export default function Rooms(){
     }
     
     const showRooms = (room)=>{
-      return  <Room key={room.roomId} roomName={room.roomName} roomId={room.roomId} image={room.image} />
+        let backgroundColor = Math.floor(Math.random()*randomColors.length);
+      return  <Room key={room.roomId} roomName={room.roomName} roomId={room.roomId} image={room.image} backgroundColor={backgroundColor} />
     }
     const addDialog = (addStatus)=>{
         setAddRoom(addStatus);    
@@ -117,7 +98,7 @@ export default function Rooms(){
 
     const showPublicRooms = (room) => {
         let backgroundColor = Math.floor(Math.random()*randomColors.length);
-        return <PublicRoom key={room.roomId} roomId={room.roomId} roomName={room.roomName} isManaged={room.isManaged} backgroundColor={randomColors[backgroundColor]} />
+        return <PublicRoom key={room.roomId} roomId={room.roomId} roomName={room.roomName} isManaged={false} backgroundColor={randomColors[backgroundColor]} />
     }
     
     return(
@@ -127,7 +108,7 @@ export default function Rooms(){
                 <Typography sx={{color:blueGrey[100]}} variant="h5" gutterBottom >Rooms</Typography>
                 <Box >
                 
-                    <Box  component={motion.div} 
+                    {!user.data.isAdvertiser?<Box  component={motion.div} 
                         variants={containerVariants}
                         initial='hidden' 
                         animate='visible' 
@@ -141,7 +122,7 @@ export default function Rooms(){
                             <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={removeRoom} >
                                 <DeleteForever/>
                             </IconButton>
-                    </Box>
+                    </Box>:null}
                 
                 
                 </Box>
@@ -152,40 +133,12 @@ export default function Rooms(){
             
 
             <Divider  />
-            <List  sx={{bgcolor:blueGrey['600'],color:blueGrey['100'],px:1}}>
+            <List  sx={{bgcolor:blueGrey['600'],color:blueGrey['100'],px:1,overflow:'auto',height:200}}>
                 {publicRooms.map(showPublicRooms)}
-                <ListItemButton >
-                    <ListItemIcon>
-                        <Avatar></Avatar>
-                    </ListItemIcon>
-                    <ListItemText >
-                        Sport
-                    </ListItemText>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton >
-                    <ListItemIcon>
-                        <Avatar></Avatar>
-                    </ListItemIcon>
-                    <ListItemText>
-                        Food
-                    </ListItemText>
-                </ListItemButton>
-                <Divider />
-                <ListItemButton >
-                    <ListItemIcon>
-                        <Avatar></Avatar>
-                    </ListItemIcon>
-                    <ListItemText>
-                        Restaurants
-                    </ListItemText>
-                </ListItemButton>
-
             </List >
             <Divider light />
-            <List sx={{bgcolor:blueGrey['800'],color:blueGrey['A100'],px:1}}>
+            <List sx={{bgcolor:blueGrey['700'],color:blueGrey['A100'],overflow:'auto',height:625}}>
                 {rooms.map(showRooms)||<div>Loading...</div>}
-                        
             </List>
         </Box>
     );
@@ -194,5 +147,3 @@ export default function Rooms(){
 
 
 
-// onMouseLeave={()=>setAddMenu(addMenu => !addMenu)
-// onMouseEnter={()=>setAddMenu(addMenu => !addMenu)}

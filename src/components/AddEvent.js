@@ -1,15 +1,14 @@
 import {Dialog,DialogTitle,DialogContent,Box,Button,TextField} from '@mui/material';
-import { useContext, useState } from 'react';
+import {  useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createEvent } from '../store/cache-actions';
-import { cacheActions } from '../store/cache-slice';
-import { SocketContext } from '../utils/socket';
+
 
 
 
 
 export default function AddEvent({addEvent,dialogState}){
-    const socket = useContext(SocketContext);
+    
 
 
     const token = useSelector(state => state.user.token);
@@ -33,8 +32,11 @@ export default function AddEvent({addEvent,dialogState}){
         
         const event = {eventSubject:subject,eventDate:date,eventDescription:description};
         dispatch(createEvent(currentRoom,event,token));
-        
+        setSubject('');
+        setDate('');
+        setDescription('')
         dialogState(false);
+        
     }
 
 

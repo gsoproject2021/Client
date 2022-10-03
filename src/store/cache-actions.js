@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {cacheActions} from './cache-slice';
 import { roomsActions } from './room-slice';
+import { userActions } from './user-slice';
 
 
 
@@ -99,10 +100,13 @@ export const changeAdminState = (userId,isAdmin,currentRoom,token) => {
 };
 
 export const createEvent = (currentRoom,eventDetails,token) => {
+    let subject = eventDetails.eventSubject;
+    let date= eventDetails.eventDate;
+    let description = eventDetails.eventDescription;
     
     return async (dispatch) => {
         const newEvent = async () => {
-            const response = await axios.post('http://localhost:4000/event',{roomId:currentRoom.roomId,event:eventDetails},{headers:{Authorization:`Bearer ${token}`}});
+            const response = await axios.post('http://localhost:4000/event',{roomId:currentRoom.roomId,subject,date,description},{headers:{Authorization:`Bearer ${token}`}});
             if(!response){
                 throw new Error("event didn't created");
             }
@@ -111,8 +115,11 @@ export const createEvent = (currentRoom,eventDetails,token) => {
         } 
         try{
             const event = await newEvent();
-            console.log('recived',event);
-            dispatch(roomsActions.addEvent(event));
+            if(typeof event === 'string'){
+                dispatch(userActions.setMessage(event))
+            }else{
+                dispatch(roomsActions.addEvent(event));
+            }
         }catch(err){
             console.log(err);
         }
@@ -133,7 +140,9 @@ export const removeEvent = (eventId,roomId,token) => {
        }
        try{
            const deleted = await deleteEvent();
-           console.log(deleted);
+           if(typeof deleted === 'string'){
+            dispatch(userActions.setMessage(deleted));
+           }
            dispatch(roomsActions.deleteEvent({eventId,roomId}));
        }catch(err){
            console.log(err);
@@ -142,10 +151,13 @@ export const removeEvent = (eventId,roomId,token) => {
 };
 
 export const updateEventDetails = (event,roomId,token) => {
-    console.log(event);
+    let subject = event.eventSubject;
+    let date = event.eventDate;
+    let description = event.eventDescription;
+    let eventId = event.eventId;   
     return async (dispatch) => {
         const editEvent = async () =>{
-        const response = await axios.put('http://localhost:4000/event',{event:event,roomId:roomId},{headers:{Authorization:`Bearer ${token}`}});
+        const response = await axios.patch('http://localhost:4000/event/',{eventId,subject,date,description,roomId:roomId},{headers:{Authorization:`Bearer ${token}`}});
             if(!response){
                 throw new Error("event didn't updated");
             }
@@ -154,8 +166,11 @@ export const updateEventDetails = (event,roomId,token) => {
         }
         try{
             const updatedEvent = await editEvent();
-            
-            dispatch(roomsActions.updateEvent(updatedEvent));
+            if(typeof updatedEvent === 'string'){
+                dispatch(userActions.setMessage(updatedEvent))
+            }else{
+                dispatch(roomsActions.updateEvent(updatedEvent));
+            }
         }catch(err){
             console.log(err);
         }

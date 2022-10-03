@@ -1,15 +1,14 @@
 import { ListItemButton,ListItemIcon,ListItemText,Avatar,Divider, IconButton } from "@mui/material"
-import { width } from "@mui/system";
 import React,{ useContext, useEffect, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import logo from "../images/logo192.png";
 import AddPicture from "./AddPicture";
-
 import { roomsActions } from "../store/room-slice";
-import { addEvent } from "../store/rooms-actions";
 import { SocketContext } from "../utils/socket";
+import { blueGrey } from "@mui/material/colors";
 
-export default function Room({roomName,roomId,image}){
+
+
+export default function Room({roomName,roomId,image,backgroundColor}){
     const [isSelected,setIsSelected] = useState(-1);
     const [addDialog,setAddDialog] = useState(false);
     const dispatch = useDispatch();
@@ -91,11 +90,11 @@ export default function Room({roomName,roomId,image}){
     return(
         <React.Fragment>
             <Divider  />
-                <ListItemButton onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
+                <ListItemButton sx={{bgcolor:blueGrey[900]}} onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
                     <ListItemIcon>
                         <IconButton onClick={() => setAddDialog(true)}>
-                            <Avatar src={pic} sx={{width:45,height:45}}>
-                                
+                            <Avatar src={pic} sx={{  width:40, height:40, }}>
+                                {roomName[0]}
                             </Avatar>
                         </IconButton>
                         <AddPicture dialogState={handleDialog} open={addDialog} type="room" roomId={roomId} />

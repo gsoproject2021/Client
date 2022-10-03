@@ -14,6 +14,7 @@ export default function Event({eventId,subject,date,hour,description}){
     
     const dispatch = useDispatch();
     const token = useSelector(state => state.user.token);
+    const data = useSelector(state => state.user.data);
     const currentRoom = useSelector(state => state.rooms.currentRoom);
 
     const [isSelected,setIsSelected] = useState();
@@ -51,7 +52,7 @@ export default function Event({eventId,subject,date,hour,description}){
                             </Typography>
                             {actions &&
                             <Box>
-                                <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = {() => setOpenEditDialog(true)} >
+                            <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = {() => setOpenEditDialog(true)} >
                                     <Edit/>
                                 </IconButton> 
                                 <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = { deleteEvent } >

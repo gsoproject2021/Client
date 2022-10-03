@@ -1,13 +1,13 @@
 import { Dialog,DialogTitle,DialogContent,Box,Button,Avatar,Input } from "@mui/material";
-import { useState,useRef,useEffect } from "react";
+import { useState,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadPicture } from "../store/user-actions";
 import { uploadRoomPicture } from "../store/rooms-actions";
 
 
 export default function AddPicture({open,dialogState,type,roomId}){
-  const currentRoom = useSelector(state => state.rooms.currentRoom);
-    const [file, setFile] = useState();
+  
+  const [file, setFile] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
 

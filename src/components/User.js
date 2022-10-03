@@ -3,14 +3,10 @@ import { ListItemButton,Avatar,ListItemText, ListItemAvatar, IconButton,Box,  Ba
 import { BookmarkAdd, Clear } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeAdminState, removeUserFromRoom } from "../store/cache-actions";
-import { width } from "@mui/system";
-import { makeStyles } from "@mui/styles";
 
 
 
-
-
-export default function User({firstName,userId,isAdmin,image,isOnline}){
+export default function User({firstName,userId,isAdmin,image,isOnline,isRoomAdmin}){
     
     
     const user = useSelector(state => state.user.data);
@@ -50,7 +46,7 @@ export default function User({firstName,userId,isAdmin,image,isOnline}){
             <Badge sx={{'& .MuiBadge-badge':{backgroundColor: isOnline ? '#44b700' : '#d32f2f',
     color: isOnline ? '#44b700' : '#d32f2f'}}} variant="dot" overlap="circular"  anchorOrigin={{ horizontal:"right",vertical:"bottom"}}>
                 
-                    <Avatar sx={{width:45,height:45}} src={pic} />
+                    <Avatar sx={{width:45,height:45}} src={image} >{firstName[0]}</Avatar>
                 
             </Badge>
             </ListItemAvatar>
@@ -60,11 +56,11 @@ export default function User({firstName,userId,isAdmin,image,isOnline}){
              <ListItemText >  
                    
              </ListItemText>
-             {roomAdmin?<Box>
-                <IconButton onClick={handleRoomAdmin}>
+             {isRoomAdmin?<Box>
+                <IconButton color="warning" onClick={handleRoomAdmin}>
                     <BookmarkAdd/>
                 </IconButton>
-                <IconButton onClick={handleDelete}>
+                <IconButton color="error" onClick={handleDelete}>
                     <Clear/>
                 </IconButton>
              </Box>:null}

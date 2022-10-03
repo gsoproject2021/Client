@@ -2,6 +2,7 @@ import { roomsActions } from "./room-slice";
 
 import axios from "axios";
 import { cacheActions } from "./cache-slice";
+import { userActions } from "./user-slice";
 
 export const fetchRoomsData = (userId,token) =>{
     return async (dispatch)=>{
@@ -20,7 +21,6 @@ export const fetchRoomsData = (userId,token) =>{
         };
         try{
             const roomsData = await fetchRooms();
-            
             dispatch(roomsActions.loadRooms({roomsData,userId}));
         }catch(error){
             console.log(error);
@@ -43,13 +43,18 @@ export const createRoom = (roomName,token) =>{
         try{
             const newRoom = await addRoom();
             console.log(newRoom);
-            dispatch(roomsActions.addRoom(newRoom));
+            if(typeof newRoom === 'string'){
+                dispatch(userActions.setMessage(newRoom))
+            }else{
+                dispatch(roomsActions.addRoom(newRoom));
+            }
         }catch(err){
             console.log(err);
         }
     }
 };
 export const deleteRoom = (roomId,users,token)=>{
+    console.log(roomId,users);
     return async (dispatch)=>{
         const removeRoom = async ()=>{
             const response = await axios.delete(`http://localhost:4000/room/${roomId}`,{data:{users:users},headers:{Authorization:`Bearer ${token}` }});
@@ -79,7 +84,12 @@ export const updateRoom = (roomId,roomName,token) => {
         }
         try{
             const updated = await editRoom();
-            dispatch(roomsActions.updateRoom(updated));;
+            if(typeof updated === 'string'){
+                dispatch(userActions.setMessage(updated));
+            }
+            else{
+                dispatch(roomsActions.updateRoom(updated));
+            }
         }catch(err){
             console.log(err);
         }
@@ -112,6 +122,73 @@ export const uploadRoomPicture = (token,roomId,image) => {
     }
 }
 
+export const addPublicRoom = (token,newRoom) => {
+    let {roomName} = newRoom;
+    return async (dispatch) => {
+        const addPublic = async () => {
+            const response = await axios.post("http://localhost:4000/publicRooms/",{roomName},{headers:{Authorization:`Bearer ${token}`}});
+            if(!response){
+                throw new Error("something went wrong room didn't created");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const room = await addPublic();
+            console.log(room)
+            dispatch(roomsActions.addPublicRoom(room.room));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+}
+
+export const updatePublicRoom = (token,roomName,roomId) => {
+    return async (dispatch) => {
+        const updatePublic = async () => {
+            const response = await axios.patch("http://localhost:4000/publicRooms/",{roomName,roomId},{headers:{Authorization:`Bearer ${token}`}});
+            if(!response){
+                throw new Error("something went wrong room didn't updated");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const room = await updatePublic();
+            console.log(room)
+            dispatch(roomsActions.updatePublicRooms(room.room));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+}
+
+export const deletePublicRoom = (token,roomId) => {
+    return async (dispatch) => {
+        const deletePublic = async () => {
+            const response = await axios.delete(`http://localhost:4000/publicRooms/${roomId}`,{headers:{Authorization:`Bearer ${token}`}})
+            
+            if(!response){
+                throw new Error("somehitng went wrong room didnt deleted");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const deleted = deletePublic();
+            if(deleted.message === "room deleted"){
+                dispatch(roomsActions.deletePublicRoom(roomId));
+                
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+
+    }
+}
 // export const addEvent = (socket,id) => {
 //     console.log(socket,id);
 //     return async (dispatch) => {

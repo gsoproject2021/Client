@@ -40,7 +40,7 @@ export default function Admin(props){
 
     const [value, setValue] = useState('users');
     const [manage,setManage] = useState(true);
-    const [managedUser,setManagedUser] = useState(user);
+    
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -105,7 +105,7 @@ export default function Admin(props){
                         </Box>
                     </Grid>
                     <Grid item lg={10}>
-                            
+                           
                         {!manage?<RoomManagement/>:<UserProfile />}
                     </Grid>
                 </Grid>   

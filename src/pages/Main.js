@@ -1,17 +1,16 @@
 import { makeStyles } from "@mui/styles";
-import { blueGrey,grey } from "@mui/material/colors";
+import { blueGrey } from "@mui/material/colors";
 import { Grid } from "@mui/material";
 import Rooms from "../components/Rooms";
 import Events from "../components/Events";
 import ChatWindow from '../components/ChatWindow';
 import Members from '../components/Members'
 import { motion } from "framer-motion/dist/framer-motion";
-import colors from "../utils/colors";
-import { io } from "socket.io-client";
+
 import { useSelector,useDispatch } from "react-redux";
 
 import { roomsActions } from "../store/room-slice";
-import { useCallback, useContext, useEffect, useState } from "react";
+import {  useContext } from "react";
 import { SocketContext } from "../utils/socket";
 
 
@@ -46,10 +45,9 @@ export default function Main(){
     const socket = useContext(SocketContext);
     const classes = useStyles();
     const user = useSelector(state => state.user.data);
-    const rooms = useSelector(state => state.rooms.rooms);
     const currentRoom = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
-    const [newRoom,setNewRoom] = useState();
+    
 
     
     

@@ -6,11 +6,12 @@ const roomsSlice = createSlice({
     initialState:{publicRooms:[],rooms:[],currentRoom:{roomId:0,users:[],events:[],messages:[],image:''}},
     reducers:{
         loadRooms(state,action){
-            
-                state.publicRooms = action.payload.publocRooms;
+                
+                state.publicRooms = action.payload.roomsData.publicRooms;
                 state.rooms = action.payload.roomsData.rooms;
-                state.currentRoom = state.rooms[0];
-            
+                if(state.rooms.length>0){
+                    state.currentRoom = state.rooms[0];
+                }
                 state.currentRoom.users.forEach(user => {
                     if(user.userId === action.payload.userId){
                         user.isOnline = true
@@ -150,10 +151,9 @@ const roomsSlice = createSlice({
         },
 
         isUserOnline(state,action){
-            console.log(action.payload)
+    
             let roomIndex = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
             let userIndex = state.rooms[roomIndex].users.findIndex(user => user.userId === action.payload.userId);
-            console.log(userIndex)
             state.rooms[roomIndex].users[userIndex].isOnline = true;
 
             if(state.currentRoom.roomId === action.payload.roomId){
@@ -185,6 +185,19 @@ const roomsSlice = createSlice({
             if(state.currentRoom.roomId === action.payload.roomId){
                 state.currentRoom.messages = [...state.currentRoom.messages,action.payload];
             }
+        },
+
+        addPublicRoom(state,action){
+            state.publicRooms = [...state.publicRooms,action.payload];
+        },
+
+        updatePublicRooms(state,action){
+            const index = state.publicRooms.findIndex(room => room.roomId === action.payload.roomId);
+            state.publicRooms[index] = action.payload;
+        },
+
+        deletePublicRoom(state,action){
+            state.publicRooms = state.publicRooms.filter(room => room.roomId !== action.payload);
         }
 
 

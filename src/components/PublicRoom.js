@@ -3,7 +3,10 @@ import { ListItemButton,Box,IconButton,ListItemIcon,Avatar,ListItemText,Divider,
 import { DeleteOutline } from '@mui/icons-material';
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { blueGrey, deepPurple } from '@mui/material/colors';
+import { blueGrey, } from '@mui/material/colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { updatePublicRoom,deletePublicRoom } from '../store/rooms-actions';
 
 const schema = yup.object().shape({
     roomName: yup.string().required("Room name can't be empty"),
@@ -11,14 +14,21 @@ const schema = yup.object().shape({
 
 export default function PublicRoom({roomId,roomName,isManaged,backgroundColor}){
     const [open,setOpen] = useState(false);
-
+    const dispatch = useDispatch();
+    const token = useSelector(state => state.user.token);
+    
     const formik = useFormik({
         initialValues:roomName,
         validationSchema:schema,
-        onSubmit: data => {
-            console.log(data);
+        onSubmit: data => {    
+            dispatch(updatePublicRoom(token,data.roomName,roomId))
+            setOpen(false);
         }
     })
+
+    useEffect(() =>{
+        formik.setValues({roomName:roomName})
+    },[])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -32,8 +42,8 @@ export default function PublicRoom({roomId,roomName,isManaged,backgroundColor}){
         console.log("2")
     }
 
-    const deletePublicRoom = () => {
-        console.log("delete")
+    const handleDeletePublic = () => {
+        dispatch(deletePublicRoom(token,roomId))
     }
 
     return(
@@ -50,7 +60,7 @@ export default function PublicRoom({roomId,roomName,isManaged,backgroundColor}){
                 
             </ListItemButton>
             {isManaged?<Box sx={{py:1}} >
-                <IconButton >
+                <IconButton onClick={handleDeletePublic} >
                     <DeleteOutline sx={{color: blueGrey[100] }} />
                 </IconButton>
              </Box>:null}

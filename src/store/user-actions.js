@@ -1,4 +1,5 @@
 import axios from "axios";
+import { roomsActions } from "./room-slice";
 import { userActions } from "./user-slice";
 
 export const login = (email,password) => {
@@ -7,7 +8,9 @@ export const login = (email,password) => {
         const userLogin = async () => {
             const response = await axios.post(`http://localhost:4000/login/`,{email:email,password:password});
             if(!response){
+                dispatch(userActions.setMessage("something went wrong can't login"));
                 throw new Error('something went wrong');
+                
             }
             const data = response.data;
             
@@ -15,9 +18,17 @@ export const login = (email,password) => {
         }
         try{
             const user = await userLogin();
-            dispatch(userActions.setUser(user));
+            
+            if(typeof user === 'string'){
+                dispatch(userActions.setMessage(user));
+            }else{
+                dispatch(userActions.setUser(user));
+            }
+            
+            
         }catch(err){
             console.log(err);
+            dispatch(userActions.setMessage(err))
         }
         
 
@@ -31,6 +42,7 @@ export const signup = (data) => {
             
             const response = await axios.post('http://localhost:4000/signup',userData);
             if(!response){
+                dispatch(roomsActions.setMessage("something went wrong can't sign-up"));
                 throw new Error("something went wrong");
             }
             const data = response.data;
@@ -40,32 +52,39 @@ export const signup = (data) => {
         try{
             const user = await userSignup();
             console.log(user)
-            dispatch(userActions.setUser(user));
+            if(typeof user === 'string'){
+                dispatch(userActions.setMessage(user));
+            }
+            else{
+                dispatch(userActions.setUser(user));
+            }        
         }catch(err){
             console.log(err);
         }
     }
 }
 
-export const autoLogin = (data) => {
-    return async (dispatch) => {
-        dispatch(userActions.setUser(data));
-    }
-}
+// export const autoLogin = (data) => {
+//     return async (dispatch) => {
+//         dispatch(userActions.setUser(data));
+//     }
+// }
 
-export const logout = () => {
-    return async (dispatch) => {
-        dispatch(userActions.logout());
-    }
-}
+// export const logout = () => {
+//     return async (dispatch) => {
+//         dispatch(userActions.logout());
+//     }
+// }
 
 export const updateUser = (userData,token) => {
+    let {firstName,lastName,birthday,email} = userData;
     return async (dispatch) => {
         const update = async () => {
             const response = await axios.patch('http://localhost:4000/user',
-                                                {userData},
+                                                {firstName,lastName,email,birthday},
                                                 {headers:{Authorization:`Bearer ${token}`}});
             if(!response){
+                dispatch(userActions.setMessage("something went wrong can't update user"));
                 throw new Error("something went wrong cant update user")
             }
             const data = response.data;
@@ -73,7 +92,13 @@ export const updateUser = (userData,token) => {
         }
         try{
         const data = await update();
-        dispatch(userActions.setUser(data));
+        console.log(data)
+        if(typeof data === 'string'){
+            dispatch(userActions.setMessage(data));
+        }
+        else{
+            dispatch(userActions.setUser(data));
+        }
         }catch(err){
             console.log(err)
         }
