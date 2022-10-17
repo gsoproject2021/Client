@@ -1,7 +1,7 @@
-import { Card,CardContent,Box,Typography} from "@mui/material"
+import { Card,CardContent,Box,Typography, Avatar,ListItem} from "@mui/material"
 import { teal,cyan,grey,blueGrey} from "@mui/material/colors"
 import { makeStyles } from "@mui/styles"
-import { bgcolor } from "@mui/system"
+
 
 import { useSelector } from "react-redux"
 
@@ -24,34 +24,36 @@ const useStyles = makeStyles({
 })
 
 
-export default function Message({sender,message,senderId,time,messageId}) {
+export default function Message({sender,message,senderId,time,messageId,image}) {
     const myId = useSelector(state => state.user.data.userId);
     const classes = useStyles();
     return (
-        <Box sx={{display:"flex"}} className={myId===senderId ? classes.myDirection : classes.otherDirection}>
-
+        <ListItem sx={{display:"flex",px:3,py:2}} className={myId===senderId ? classes.myDirection : classes.otherDirection}>
+            {myId!==senderId ?  <Avatar  src={image} /> : null}
             <Card sx={{px:2,
                   mx:2,
                   mt:2,
                   width:"60%",
-                  bgcolor: myId===senderId ? teal['A200'] : blueGrey['300'],
+                  bgcolor: myId===senderId ? teal['A700'] : blueGrey['300'],
                   color:'black',
                   }} >
-                <CardContent>            
-                    <Box sx={{display: "flex",justifyContent:"space-between" }}>
-                        {senderId !== myId ? <Typography variant="h6" gutterBottom >
-                            {sender}
-                        </Typography> : null}
-                        <Typography>
-                            15:04
+                    
+                <CardContent>
+                    <Box sx={{display:'flex',justifyContent:'space-between'}}>           
+                        <Box >
+                            {senderId !== myId ? <Typography variant="h6" gutterBottom >
+                                {sender}
+                            </Typography> : null}
+                            <Typography variant="body1" >
+                            {message}
                         </Typography>                        
-                    </Box>
-                    <Typography variant="body1" >
-                        {message}
-                    </Typography>
-
+                        </Box>
+                        <Typography variant="body1" >
+                            {time}
+                        </Typography>
+                    </Box> 
                 </CardContent>
             </Card>
-        </Box>
+        </ListItem>
     )
 }

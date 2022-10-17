@@ -17,6 +17,7 @@ const userSlice = createSlice({
             state.token = '';
             state.expireIn = 0;
             localStorage.removeItem('data');
+            localStorage.removeItem('roomsData')
         },
         changePicture(state,action){
             state.data.image = '';

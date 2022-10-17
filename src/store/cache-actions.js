@@ -41,17 +41,20 @@ export const addUsersToRoom = (users,currentRoom,token) => {
         try{
             
             const addedUsers = await addToRoom();
-            console.log(addedUsers);
-            //const currentData = {roomId:currentRoom.roomId,roomName:currentRoom.roomName,events:currentRoom.events,users:addedUsers};
-            console.log(addedUsers);
-            dispatch(roomsActions.addUser(addedUsers));
+            if(typeof addedUsers === 'string'){
+                dispatch(userActions.setMessage(addedUsers));
+            }
+            else{
+                dispatch(roomsActions.addUser(addedUsers));
+            }
         }catch(err){
             console.log(err);
         }
     }
     
 };
-export const removeUserFromRoom = (userId,currentRoom,token) => {
+export const removeUserFromRoom = (userId,currentRoom,myUserId,token) => {
+    
     return async (dispatch) => {
         const deleteUser = async ()=>{
             const response = axios.delete(`http://localhost:4000/roomUser`,{data:{userId:userId,roomId:currentRoom.roomId},headers:{Authorization:`Bearer ${token}`}});
@@ -63,42 +66,17 @@ export const removeUserFromRoom = (userId,currentRoom,token) => {
         }
         try{
             const message = await deleteUser();
-            console.log(message);
-            dispatch(roomsActions.removeUser(userId,currentRoom.roomId));
+            if(typeof message === 'string'){
+                dispatch(userActions.setMessage(message));
+            }
+            let roomId = currentRoom.roomId;
+            let data = {userId,roomId,myUserId}
+            dispatch(roomsActions.removeUser(data));
         }catch(err){
             console.log(err);
         }
     }
 };
-
-export const changeAdminState = (userId,isAdmin,currentRoom,token) => {
-    return async (dispatch) =>{
-        const change = async ()=>{
-            const response = axios.put(`http://localhost:4000/roomUser`,{roomId:currentRoom.roomId,userId:userId,idAdmin:isAdmin},{headers:{Authorization:`Bearer ${token}`}});
-            if(!response){
-                throw new Error("something went wrong");
-            }
-            const data = response.data;
-            return data;
-        }
-        try{
-            const data = await change();
-            let users = currentRoom.users;
-            for(let i = 0; i < users; i++){
-                if(users[i] === userId){
-                    users[i].isAdmin = data.isAdmin;
-                }
-            }
-            const currentData = {roomId:currentRoom.roomId,roomName:currentRoom.roomName,events:currentRoom.events,users:users};
-            dispatch(cacheActions.currentRoom(currentData));
-            dispatch(cacheActions.updateCache(currentData));
-
-        }catch(err){
-            console.log(err);
-        }
-    }
-};
-
 export const createEvent = (currentRoom,eventDetails,token) => {
     let subject = eventDetails.eventSubject;
     let date= eventDetails.eventDate;
@@ -126,7 +104,6 @@ export const createEvent = (currentRoom,eventDetails,token) => {
 
     } 
 };
-
 export const removeEvent = (eventId,roomId,token) => {
     
     return async (dispatch) => {
@@ -149,7 +126,6 @@ export const removeEvent = (eventId,roomId,token) => {
        }
     }
 };
-
 export const updateEventDetails = (event,roomId,token) => {
     let subject = event.eventSubject;
     let date = event.eventDate;
@@ -166,6 +142,7 @@ export const updateEventDetails = (event,roomId,token) => {
         }
         try{
             const updatedEvent = await editEvent();
+            console.log(updatedEvent);
             if(typeof updatedEvent === 'string'){
                 dispatch(userActions.setMessage(updatedEvent))
             }else{
@@ -175,7 +152,7 @@ export const updateEventDetails = (event,roomId,token) => {
             console.log(err);
         }
     }
-}
+};
 
 
 

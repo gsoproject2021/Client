@@ -1,7 +1,7 @@
 import { roomsActions } from "./room-slice";
 
 import axios from "axios";
-import { cacheActions } from "./cache-slice";
+
 import { userActions } from "./user-slice";
 
 export const fetchRoomsData = (userId,token) =>{
@@ -42,7 +42,6 @@ export const createRoom = (roomName,token) =>{
         };
         try{
             const newRoom = await addRoom();
-            console.log(newRoom);
             if(typeof newRoom === 'string'){
                 dispatch(userActions.setMessage(newRoom))
             }else{
@@ -53,8 +52,8 @@ export const createRoom = (roomName,token) =>{
         }
     }
 };
+
 export const deleteRoom = (roomId,users,token)=>{
-    console.log(roomId,users);
     return async (dispatch)=>{
         const removeRoom = async ()=>{
             const response = await axios.delete(`http://localhost:4000/room/${roomId}`,{data:{users:users},headers:{Authorization:`Bearer ${token}` }});
@@ -63,15 +62,18 @@ export const deleteRoom = (roomId,users,token)=>{
             }     
         }
         try{
-            await removeRoom();
-
+            const msg = await removeRoom();
+            if(typeof msg === 'string'){
+                dispatch(userActions.setMessage(msg))
+            }
             dispatch(roomsActions.deleteRoom(roomId));
 
         }catch(err){
             console.log(err);
         }
     }
-}
+};
+
 export const updateRoom = (roomId,roomName,token) => {
     return async (dispatch)=>{
         const editRoom = async ()=>{

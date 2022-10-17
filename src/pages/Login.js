@@ -41,7 +41,6 @@ export default function Login(){
         validationSchema:schema,
         onSubmit: data => {
             const { email,password } = data;
-            console.log(data);
             dispatch(login(email,password));
         }
     })

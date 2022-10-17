@@ -28,16 +28,6 @@ const cacheSlice = createSlice({
             state.currentRoom.events = action.payload.events;
         },
 
-        updateIsAdmin(state,action){
-            let users = state.currentRoom.users;
-            for(let i = 0; i < users; i++){
-                if(users[i] === action.payload.userId){
-                    users[i].isAdmin = action.payload.isAdmin;
-                }
-            }
-            state.currentRoom.users = users;
-        },
-
         removeUser(state,action){
             state.currentRoom.users = state.currentRoom.users.filter(user => user.userId !== action);
         },

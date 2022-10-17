@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ListItemButton,Box,IconButton,ListItemIcon,Avatar,ListItemText,Divider,Dialog,DialogActions,DialogContent,DialogTitle,Button,TextField } from "@mui/material";
 import { DeleteOutline } from '@mui/icons-material';
 import * as yup from "yup";
@@ -7,16 +7,22 @@ import { blueGrey, } from '@mui/material/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { updatePublicRoom,deletePublicRoom } from '../store/rooms-actions';
+import { roomsActions } from '../store/room-slice';
+import { SocketContext } from '../context/SocketContext';
+
 
 const schema = yup.object().shape({
     roomName: yup.string().required("Room name can't be empty"),
 })
 
-export default function PublicRoom({roomId,roomName,isManaged,backgroundColor}){
+export default function PublicRoom({roomId,roomName,type,isManaged,backgroundColor}){
+    
+    const socket = useContext(SocketContext);
     const [open,setOpen] = useState(false);
     const dispatch = useDispatch();
+    const currentRoom = useSelector(state => state.rooms.currentRoom);
+    const publicRoomData = useSelector(state => state.rooms.publicRoomData);
     const token = useSelector(state => state.user.token);
-    
     const formik = useFormik({
         initialValues:roomName,
         validationSchema:schema,
@@ -39,12 +45,16 @@ export default function PublicRoom({roomId,roomName,isManaged,backgroundColor}){
       };
 
     const handleChangeRoom = () => {
-        console.log("2")
+        dispatch(roomsActions.setPublicRoomData({roomId,roomName}));
     }
 
     const handleDeletePublic = () => {
         dispatch(deletePublicRoom(token,roomId))
     }
+
+    // useEffect(() => {
+    //     socket.emit("getPublicRoom",{roomName,type,publicRoomData});
+    // },[publicRoomData]);
 
     return(
         <div>

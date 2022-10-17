@@ -10,7 +10,7 @@ import EditEvent from "./EditEvent";
 import { blueGrey,indigo } from "@mui/material/colors";
 
 
-export default function Event({eventId,subject,date,hour,description}){
+export default function Event({eventId,subject,date,hour,description,isRoomAdmin}){
     
     const dispatch = useDispatch();
     const token = useSelector(state => state.user.token);
@@ -50,7 +50,7 @@ export default function Event({eventId,subject,date,hour,description}){
                             <Typography variant="subtitle1" gutterBottom>
                                 {hour} {date}
                             </Typography>
-                            {actions &&
+                            {isRoomAdmin && actions &&
                             <Box>
                             <IconButton size="small" component={motion.div} whileHover={{scale:1.5}} sx={{color:colors.blueGray[200]}} onClick = {() => setOpenEditDialog(true)} >
                                     <Edit/>

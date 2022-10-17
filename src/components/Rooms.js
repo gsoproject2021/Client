@@ -1,7 +1,7 @@
 import { Edit,Add, DeleteForever } from "@mui/icons-material";
 import {Box, Divider, Typography,List,  IconButton} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useState,useEffect, useContext} from "react";
+import { useState,useEffect, } from "react";
 import {motion} from 'framer-motion/dist/framer-motion';
 
 import {cyan,teal,blueGrey,red,pink,purple,deepOrange,deepPurple,indigo,blue,lightBlue,green,lightGreen,lime,yellow,amber,orange,brown} from '@mui/material/colors';
@@ -12,7 +12,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { fetchRoomsData,deleteRoom } from "../store/rooms-actions";
 
 
-import { SocketContext } from "../utils/socket";
+import  socketConn from "../utils/socket";
 import PublicRoom from "./PublicRoom";
 
 
@@ -50,15 +50,14 @@ const randomColors = [cyan[500],teal[500],red[500],pink[500],purple[500],deepOra
 
 
 
-export default function Rooms(){
-    const socket = useContext(SocketContext);
+export default function Rooms({isCurrentRoomAdmin}){
+    
     const user = useSelector(state => state.user);
     const rooms = useSelector(state => state.rooms.rooms);
     const publicRooms = useSelector(state => state.rooms.publicRooms)
     const current = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
     const classes = useStyles();
-    
     const [addRoom,setAddRoom] = useState(false);
     const [editRoom,setEditRoom] = useState(false);
     
@@ -69,7 +68,12 @@ export default function Rooms(){
     
     const showRooms = (room)=>{
         let backgroundColor = Math.floor(Math.random()*randomColors.length);
-      return  <Room key={room.roomId} roomName={room.roomName} roomId={room.roomId} image={room.image} backgroundColor={backgroundColor} />
+      return  <Room key={room.roomId} 
+                    roomName={room.roomName} 
+                    roomId={room.roomId} 
+                    image={room.image} 
+                    backgroundColor={backgroundColor} 
+                    newMessage={room.newMessage} />
     }
     const addDialog = (addStatus)=>{
         setAddRoom(addStatus);    
@@ -82,23 +86,12 @@ export default function Rooms(){
     
     useEffect(()=>{
         dispatch(fetchRoomsData(user.data.userId,user.token));
-    },[dispatch]);
+    },[dispatch,user.data,user.token]);
 
-    useEffect(() => {
-        let userRooms = rooms.map(room => room.roomId);
-        let data = {userId:user.data.userId,rooms:userRooms};
-        socket.emit('user_connected',data);
-    },)
-
-    useEffect(() => {
-        socket.on("user_online", socket => {
-            console.log(socket);
-        })
-    })
 
     const showPublicRooms = (room) => {
         let backgroundColor = Math.floor(Math.random()*randomColors.length);
-        return <PublicRoom key={room.roomId} roomId={room.roomId} roomName={room.roomName} isManaged={false} backgroundColor={randomColors[backgroundColor]} />
+        return <PublicRoom key={room.roomId} roomId={room.roomId} type={room.type} roomName={room.roomName} isManaged={false} backgroundColor={randomColors[backgroundColor]} />
     }
     
     return(
@@ -116,12 +109,12 @@ export default function Rooms(){
                             <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={()=>setAddRoom(true)}>
                                 <Add/>
                             </IconButton >
-                            <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={()=>setEditRoom(true)}>
+                            {isCurrentRoomAdmin ?<> <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={()=>setEditRoom(true)}>
                                 <Edit/>
                             </IconButton>
                             <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={removeRoom} >
                                 <DeleteForever/>
-                            </IconButton>
+                            </IconButton></> : null}
                     </Box>:null}
                 
                 

@@ -5,9 +5,10 @@ import { blueGrey } from "@mui/material/colors"
 import Menu from "./Menu"
 import { Fragment, useState } from "react"
 import {  Logout } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/user-actions";
 import { userActions } from "../store/user-slice";
+import socketConn from "../utils/socket";
 const useStyles = makeStyles({
     root:{
         width:"3.5%",
@@ -44,14 +45,18 @@ const useStyles = makeStyles({
 
 export default function SideMenu(){
     const classes = useStyles();
+    const token = useSelector(state => state.user.token);
+    const rooms = useSelector(state => state.rooms);
     const [openMenu,setOpenMenu] = useState(false);
     const dispatch = useDispatch();
+    
     const closeByRandomClick = (toClose) => {
         setOpenMenu(toClose);
     }
 
     const logoutHandler = () => {
-        dispatch(userActions.logout());
+
+        dispatch(logout(token,rooms.rooms));
     }
     
     return(

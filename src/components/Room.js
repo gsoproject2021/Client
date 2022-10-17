@@ -1,18 +1,19 @@
 import { ListItemButton,ListItemIcon,ListItemText,Avatar,Divider, IconButton } from "@mui/material"
-import React,{ useContext, useEffect, useState} from "react";
+import { Info, Sms } from "@mui/icons-material";
+import React,{  useEffect, useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddPicture from "./AddPicture";
 import { roomsActions } from "../store/room-slice";
-import { SocketContext } from "../utils/socket";
+
 import { blueGrey } from "@mui/material/colors";
 
 
 
-export default function Room({roomName,roomId,image,backgroundColor}){
+export default function Room({roomName,roomId,image,backgroundColor,newMessage}){
     const [isSelected,setIsSelected] = useState(-1);
     const [addDialog,setAddDialog] = useState(false);
     const dispatch = useDispatch();
-    const socket = useContext(SocketContext);
+    
     const currentRoom = useSelector(state =>state.rooms.currentRoom);
     const user = useSelector(state => state.user.data); 
     const rooms = useSelector(state => state.rooms.rooms);
@@ -26,56 +27,8 @@ export default function Room({roomName,roomId,image,backgroundColor}){
         setIsSelected(roomId);
         let userId = user.userId;
         dispatch(roomsActions.setCurrentRoom({roomId,userId}));
-        console.log(rooms);
+      
     }
-  
-    useEffect(() => {
-        socket.on(`event_room_${roomId}`,socket => {
-        
-            if(socket.action === 'rename'){
-                dispatch(roomsActions.updateRoom(socket.data));
-            }
-    
-            if(socket.action === 'remove' && socket.data.userId === user.userId){
-                dispatch(roomsActions.deleteRoom(socket.data.roomId));
-            }
-    
-            if(socket.action === 'remove' && socket.data.userId !== user.userId){
-                dispatch(roomsActions.removeUser(socket.data));
-            }
-    
-         })
-
-        socket.on(`events_${roomId}`,socket => {
-
-            if(socket.action === 'create_event' && socket.data.userId !== user.userId){
-                
-                dispatch(roomsActions.addEvent(socket.data));
-            }
-
-            if(socket.action === 'update_event'){
-                dispatch(roomsActions.updateEvent(socket.data));
-            }
-
-            if(socket.action === 'delete_event'){
-                
-                dispatch(roomsActions.deleteEvent(socket.data));
-            }
-
-        })
-
-        socket.on(`upload_image_${roomId}`, socket => {
-
-            dispatch(roomsActions.uploadImage(socket.data));
-        })
-
-        socket.on(`is_user_online${roomId}`,socket => {
-            
-            dispatch(roomsActions.isUserOnline(socket.userData))
-            
-        })
-
-    },[socket,dispatch]);
     
     useEffect(() => {
         if(image === null || image === ''){
@@ -93,7 +46,7 @@ export default function Room({roomName,roomId,image,backgroundColor}){
                 <ListItemButton sx={{bgcolor:blueGrey[900]}} onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
                     <ListItemIcon>
                         <IconButton onClick={() => setAddDialog(true)}>
-                            <Avatar src={pic} sx={{  width:40, height:40, }}>
+                            <Avatar sx={{  width:40, height:40, }}>
                                 {roomName[0]}
                             </Avatar>
                         </IconButton>
@@ -102,6 +55,7 @@ export default function Room({roomName,roomId,image,backgroundColor}){
                     <ListItemText>
                         {roomName}
                     </ListItemText>
+                    {newMessage ? <Info fontSize="small" color="error" />: null}
                 </ListItemButton>
             <Divider />
         </React.Fragment>

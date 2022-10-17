@@ -27,12 +27,11 @@ const useStyles = makeStyles({
 
 
 
-export default function Events(){
+export default function Events({isCurrentRoomAdmin}){
 
     const currentRoom = useSelector(state => state.rooms.currentRoom);
     const user = useSelector(state => state.user.data);
     const classes = useStyles();
-    // const [addMenu,setAddMenu] = useState(false);
     const [addEvent,setAddEvent] = useState(false);
     const [editEvent,setEditEvent] = useState(false);
     
@@ -44,7 +43,7 @@ export default function Events(){
     
 
     const showEvent = (event)=>{
-        return <Event key={event.eventId} eventId={event.eventId} subject={event.subject} date={event.date} hour={event.hour} description={event.description} />
+        return <Event key={event.eventId} isRoomAdmin={isCurrentRoomAdmin} eventId={event.eventId} subject={event.subject} date={event.date} hour={event.hour} description={event.description} />
     }
 
     return(

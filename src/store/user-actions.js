@@ -154,3 +154,21 @@ export const changePassword = (token,data) => {
     }
 }
 
+export const logout = (token,rooms) => {
+    return async (dispatch) => {
+        const userLogout = async () => {
+            const response = await axios.post("http://localhost:4000/logout/",{rooms},{headers:{Authorization:`Bearer ${token}`}});
+            if(!response){
+                throw new Error("something went wrong")
+            }
+
+            const data = response.data;
+            return data
+        }
+        const msg = await userLogout();
+        if(typeof msg === 'string'){
+            dispatch(userActions.setMessage(msg));
+            dispatch(userActions.logout());
+        }
+    }
+}
