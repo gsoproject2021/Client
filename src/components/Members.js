@@ -35,26 +35,10 @@ export default function Members({isCurrentRoomAdmin}){
     const currentRoom = useSelector(state => state.rooms.currentRoom)
     const data = useSelector(state => state.user.data);
     
-    // const [isRoomAdmin,setIsRoomAdmin] = useState();
 
     const handleClose = (status) => {
         setOpen(status);
     }
-    
-    // useEffect(() => {
-    //     let temp = currentRoom.users.filter(user => user.userId === data.userId )
-    //     let [tempUser] = temp;
-    //     if(temp.length === 0 ){
-    //         return
-    //     }
-    //     if( tempUser.isAdmin === true || tempUser.isAdmin === 1 ){
-    //         setIsRoomAdmin(true)
-            
-    //     }
-    //     else{
-    //         setIsRoomAdmin(false);
-    //     }
-    // },[currentRoom,data.userId])
     
     const showUser = (user) => {
         return <User key={user.userId} isRoomAdmin={isCurrentRoomAdmin} userId={user.userId} firstName={user.firstName} isAdmin={user.isAdmin} image={user.image} isOnline={user.isOnline} />

@@ -13,6 +13,8 @@ export default function AddUsers({openDialog,closeDialog}){
     const dispatch = useDispatch();
     const [checked,setChecked] = useState([]);
     const [users,setUsers] = useState([]);
+    
+
 
     const handleClose = () => {
         closeDialog(false);
@@ -46,6 +48,7 @@ export default function AddUsers({openDialog,closeDialog}){
                 throw new Error("something went wrong");
             }
             setUsers(response.data);
+            console.log(users)
             
         })
         .catch(err => {
@@ -85,9 +88,9 @@ export default function AddUsers({openDialog,closeDialog}){
           >
             <ListItemButton>
               <ListItemAvatar>
-                <Avatar />
+                <Avatar src={user.image} />
               </ListItemAvatar>
-              <ListItemText id={`${user.userId}`} primary={`${user.firstName}`} />
+              <ListItemText id={`${user.userId}`} primary={`${user.firstName}`} secondary={user.isAdvertiser ? "Advertiser":null} />
             </ListItemButton>
           </ListItem>
         );

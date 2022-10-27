@@ -172,3 +172,73 @@ export const logout = (token,rooms) => {
         }
     }
 }
+
+export const contactUs = (data) => {
+    let {subject,email,content} = data;
+    return async (dispatch) => {
+        const contactUs = async () => {
+            const response = await axios.post("http://localhost:4000/contactUs",{subject,email,content});
+            if(!response){
+                throw new Error("something went wrong try again later");
+            }
+
+            const data = response.data;
+            return data;
+        }
+        try{
+            const msg = await contactUs();
+            if(typeof msg === 'string'){
+                dispatch(userActions.setMessage(msg));
+            }
+        }catch(err){
+            console.log(err);
+        }
+
+    }
+}
+
+export const forgotPassword = (data) => {
+    let {email} = data;
+    return async (dispatch) => {
+        const forgot = async () => {
+            const response = axios.post("http://localhost:4000/forgotPassword/",{email})
+            if(!response){
+                throw new Error("something went wrong can't reset password now")
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const msg = await forgot();
+            if(typeof msg === 'string'){
+                dispatch(userActions.setMessage(msg));
+            }
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+}
+
+export const resetPassword = (data) => {
+    let {password,token} = data;
+    return async (dispatch) => {
+        const resetPass = async () => {
+            const response = axios.post(`http://localhost:4000/resetPassword/${token}`,{password});
+            if(!response){
+                throw new Error("something went wrong can't reset password");
+            }
+            const data = response.data;
+            return data;
+        }
+        try{
+            const msg = await resetPass();
+            if(typeof msg === 'string'){
+                dispatch(userActions.setMessage(msg));
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+}

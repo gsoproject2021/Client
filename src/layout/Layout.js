@@ -94,10 +94,23 @@ export default function Layout(){
          })  
          
          socket.on("deleteRoom",data => {
-            console.log(data)
+            
             dispatch(roomsActions.deleteRoom(data));
-         })
+         });
 
+         socket.on(`publicRoomDetails-${user.data.userId}`,data => {
+            
+            dispatch(roomsActions.setCurrentPublicRoom(data))
+         });
+
+         socket.on("updatePublicUsers",data => {
+            
+            dispatch(roomsActions.updatePublicUsers(data));
+         });
+         socket.on("updatePublicUsersById",data => {
+            
+            dispatch(roomsActions.updatePublicUsersById(data));
+         });
          return () => {
             socket.off("userConnected");
             socket.off("newMessage");
@@ -108,18 +121,22 @@ export default function Layout(){
             socket.off(`userChannel-${user.data.userId}`);
             socket.off("removeUser");
             socket.off("deleteRoom");
+            socket.off(`publicRoomDetails-${user.data.userId}`);
+            socket.off("updatePublicUsers");
+            socket.off("updatePublicUsersById");
          }
     },[socket,dispatch,user])
     
     useEffect(() => {
         
         socket.connect();
-        socket.emit("userRooms", rooms);       
+        socket.emit("userRooms", rooms);  
+        // socket.emit("getPublicRoom",{type:"public",publicRoomData});     
     })
 
-    useEffect(() => {
-        socket.emit("getPublicRoom",{type:"public",publicRoomData});
-    },[publicRoomData,socket])
+    // useEffect(() => {
+    //     socket.emit("getPublicRoom",{type:"public",publicRoomData});
+    // })
     
 
     return(

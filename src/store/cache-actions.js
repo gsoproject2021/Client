@@ -41,6 +41,7 @@ export const addUsersToRoom = (users,currentRoom,token) => {
         try{
             
             const addedUsers = await addToRoom();
+            console.log(addedUsers)
             if(typeof addedUsers === 'string'){
                 dispatch(userActions.setMessage(addedUsers));
             }
@@ -95,9 +96,10 @@ export const createEvent = (currentRoom,eventDetails,token) => {
             const event = await newEvent();
             if(typeof event === 'string'){
                 dispatch(userActions.setMessage(event))
-            }else{
-                dispatch(roomsActions.addEvent(event));
             }
+            // }else{
+            //     dispatch(roomsActions.addEvent(event));
+            // }
         }catch(err){
             console.log(err);
         }

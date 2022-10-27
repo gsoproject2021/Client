@@ -46,6 +46,14 @@ export default function PublicRoom({roomId,roomName,type,isManaged,backgroundCol
 
     const handleChangeRoom = () => {
         dispatch(roomsActions.setPublicRoomData({roomId,roomName}));
+        if(roomId === publicRoomData.curRoomId){
+            return;
+        }
+        socket.emit("getPublicRoom",{type:"public",prevRoomId:publicRoomData.curRoomId,
+            prevRoomName:publicRoomData.prevRoomName,
+            curRoomId:roomId,
+            curRoomName:roomName});
+        
     }
 
     const handleDeletePublic = () => {

@@ -12,7 +12,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { fetchRoomsData,deleteRoom } from "../store/rooms-actions";
 
 
-import  socketConn from "../utils/socket";
+
 import PublicRoom from "./PublicRoom";
 
 
@@ -88,6 +88,7 @@ export default function Rooms({isCurrentRoomAdmin}){
         dispatch(fetchRoomsData(user.data.userId,user.token));
     },[dispatch,user.data,user.token]);
 
+    
 
     const showPublicRooms = (room) => {
         let backgroundColor = Math.floor(Math.random()*randomColors.length);

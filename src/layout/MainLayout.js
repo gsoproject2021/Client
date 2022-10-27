@@ -2,16 +2,16 @@ import { useState } from 'react';
 import {Box,AppBar, Toolbar, Button} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import {motion} from 'framer-motion/dist/framer-motion';
-import {Switch,Route,Redirect,NavLink} from 'react-router-dom';
-import io from 'socket.io-client';
+import {Switch,Route,Redirect,NavLink,useParams} from 'react-router-dom';
+
 
 import About from '../pages/About';
 import ContactUs from '../pages/ContactUs';
 import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
-import PasswordReset from '../pages/PasswordReset';
-
 import colors from '../utils/colors';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 
 const useStyles = makeStyles({
     appbar:{
@@ -25,6 +25,7 @@ const useStyles = makeStyles({
 
 
 export default function MainLayout(){
+   
     const classes = useStyles();
     const [isLogin,setIsLogin] = useState(false);
     
@@ -85,8 +86,11 @@ export default function MainLayout(){
                 <Route exact path="/about">
                     <About/>
                 </Route>
-                <Route exact path="/password-reset">
-                    <PasswordReset/>
+                <Route exact path="/forgot-password">
+                    <ForgotPassword/>
+                </Route>
+                <Route exact path="/reset-password/:resetToken">
+                    <ResetPassword />
                 </Route>
                 <Redirect to="/login"/>
                 </Switch>

@@ -101,8 +101,8 @@ export default function Login(){
                             
                             
                             <Grid container>
-                            <Grid item xs>
-                                <NavLink to="/password-reset" style={{textDecoration:'none'}}>
+                            <Grid item xs sx={{py:1}}>
+                                <NavLink to="/forgot-password" style={{textDecoration:'none'}}>
                                     Forgot password?
                                 </NavLink>
                             </Grid>

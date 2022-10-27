@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { uploadPicture } from "../store/user-actions";
 import { uploadRoomPicture } from "../store/rooms-actions";
 
-
+/**
+ * this component upload picture for room and user
+ */
 export default function AddPicture({open,dialogState,type,roomId}){
   
   const [file, setFile] = useState();

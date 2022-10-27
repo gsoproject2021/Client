@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createEvent } from '../store/cache-actions';
 
 
-
+/**
+ * AddEvent component its dialog for creating events for room
+ * 
+ */
 
 
 export default function AddEvent({addEvent,dialogState}){
@@ -14,20 +17,27 @@ export default function AddEvent({addEvent,dialogState}){
     const token = useSelector(state => state.user.token);
     const currentRoom = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
-    
     const [subject,setSubject] = useState('');
     const [date,setDate] = useState('');
     const [description,setDescription] = useState('');
 
-
+    /*
+    * function that close the dialog
+    */
     const closeDialog = ()=>{
         dialogState(false);
     }
 
+    /*
+    * function that close the dialog when clicking on cancel
+    */
     const handleCancel = ()=>{
         dialogState(false);
     }
 
+    /*
+    * this function dispatch createEvent function it send event details to the server
+    */
     const addNewEvent = ()=>{
         
         const event = {eventSubject:subject,eventDate:date,eventDescription:description};

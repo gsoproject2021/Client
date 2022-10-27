@@ -9,6 +9,7 @@ import { SocketContext } from "./context/SocketContext";
 import ErrorMessage from "./components/ErrorMessage";
 import { userActions } from "./store/user-slice";
 import { roomsActions } from "./store/room-slice";
+import { CircularProgress, Modal,Box } from "@mui/material";
 
 
 let timeOut;
@@ -67,8 +68,8 @@ function App() {
 
   return (
     <Router>
-      
         <div >
+          
         <ErrorMessage/>
             {isLoggedIn ? <SocketContext.Provider value= {socket}>
                            <Layout/>

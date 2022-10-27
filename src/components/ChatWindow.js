@@ -1,5 +1,5 @@
 import {Box, Typography,IconButton, TextField, Button} from "@mui/material";
-import { ExitToApp,  LastPageSharp,  SendOutlined } from "@mui/icons-material";
+import { ExitToApp,  LastPageSharp,  SendOutlined, TimerSharp } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import { v4 as uuidv4 } from "uuid"
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import { blueGrey } from "@mui/material/colors";
 
 import { SocketContext } from "../context/SocketContext";
 import { removeUserFromRoom } from "../store/cache-actions";
+import axios from "axios";
 
 const useStyles = makeStyles({
     title:{
@@ -38,7 +39,10 @@ const useStyles = makeStyles({
 })
 
 export default function ChatWindows({isCurrentRoomAdmin}){
-    const lastMessage = useRef()
+    const [queryMessageIndex,setQueryMessageIndex] = useState(0);
+    const [messages,setMessages] = useState([]);
+    const scrollToTop = useRef();
+    const lastMessage = useRef(null)
     const rooms = useSelector(state => state.rooms.rooms);
     const currentRoom = useSelector(state => state.rooms.currentRoom);
     const user = useSelector( state => state.user.data);
@@ -47,6 +51,9 @@ export default function ChatWindows({isCurrentRoomAdmin}){
     const [myMessage,setMyMessage] = useState('');
     const socket = useContext(SocketContext);
     const publicRoomData = useSelector(state => state.rooms.publicRoomData);
+    
+    
+    
 
     const sendHandler = () => {
         let messageObj = {
@@ -55,9 +62,8 @@ export default function ChatWindows({isCurrentRoomAdmin}){
             sender: user.firstName,
             content: myMessage,
             roomId: currentRoom.roomId,
-            time: new Date().toISOString(),
+            time: Date.now(),
             roomType: currentRoom.type,
-
         }
         
         socket.emit("message",messageObj);
@@ -70,10 +76,20 @@ export default function ChatWindows({isCurrentRoomAdmin}){
     }
 
     const showMessages = (mes) => {
-        let time = mes.time.split("T");
-        let hour = time[1].slice(0,5);
-       return <Message key={mes.messageId} sender={mes.sender} time={hour} message={mes.content} senderId={mes.senderId} />
+        
+        let tempTime = new Date(mes.time);
+        let minutes = (tempTime.getMinutes() < 10 ? '0' : '') + tempTime.getMinutes();
+        let time = {
+            date: tempTime.getDate()+'/'+(tempTime.getMonth()+1)+'/'+tempTime.getFullYear(),
+            hour: tempTime.getHours() + ":" + minutes 
+        }
+        
+       return <Message key={mes.messageId} sender={mes.sender} time={time}  message={mes.content} senderId={mes.senderId} />
     }
+
+    useEffect(() => {
+        lastMessage.current?.scrollIntoView();
+    },[currentRoom.messages]);
 
     const classes = useStyles();
     return(
@@ -84,8 +100,10 @@ export default function ChatWindows({isCurrentRoomAdmin}){
                     <ExitToApp/>
                 </IconButton>:null}</> : null}
             </Box>
-            <Box  className={classes.messages}>      
-                 {currentRoom.messages.map(showMessages)||<div></div>}   
+            <Box ref={scrollToTop} className={classes.messages}> 
+                      
+                 {currentRoom.messages.map(showMessages)||<div></div>}  
+                 <div ref={lastMessage}></div> 
             </Box>
             <Box className={classes.chatInput}>
                 <TextField sx={{backgroundColor:blueGrey[100],mx:2}} fullWidth onChange={(e) => setMyMessage(e.target.value)} value={myMessage}/>

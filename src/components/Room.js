@@ -17,7 +17,7 @@ export default function Room({roomName,roomId,image,backgroundColor,newMessage})
     const currentRoom = useSelector(state =>state.rooms.currentRoom);
     const user = useSelector(state => state.user.data); 
     const rooms = useSelector(state => state.rooms.rooms);
-    const [pic,setPic] = useState('');
+    const [pic,setPic] = useState(image);
     
     const handleDialog = (status) => {
         setAddDialog(status);
@@ -46,7 +46,7 @@ export default function Room({roomName,roomId,image,backgroundColor,newMessage})
                 <ListItemButton sx={{bgcolor:blueGrey[900]}} onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
                     <ListItemIcon>
                         <IconButton onClick={() => setAddDialog(true)}>
-                            <Avatar sx={{  width:40, height:40, }}>
+                            <Avatar src={pic} sx={{  width:40, height:40, }}>
                                 {roomName[0]}
                             </Avatar>
                         </IconButton>

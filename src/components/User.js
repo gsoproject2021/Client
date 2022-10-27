@@ -14,24 +14,14 @@ export default function User({firstName,userId,isAdmin,image,isOnline,isRoomAdmi
     const currentRoom = useSelector(state => state.rooms.currentRoom);
     const dispatch = useDispatch();
     const [roomAdmin,setRoomAdmin] = useState();
-    const [pic,setPic] = useState();
-    
-    // const member = {userId:user.userId,firstName:user.firstName,isAdmin:1}
+    const [pic,setPic] = useState(image);
     
     
-    // useEffect(() => {
-    //     setRoomAdmin(currentRoom.users.includes(member));    
-    // })
-
     const handleDelete = () =>{
-        dispatch(removeUserFromRoom(userId,currentRoom,user.userId,token));
-        
+        dispatch(removeUserFromRoom(userId,currentRoom,user.userId,token));  
     }
 
-    // const handleRoomAdmin = () => {
-    //     dispatch(changeAdminState(userId,isAdmin,currentRoom,token));
-    // }
-
+    
     useEffect(() => {
         if(image === null){
             setPic('');
@@ -46,7 +36,7 @@ export default function User({firstName,userId,isAdmin,image,isOnline,isRoomAdmi
             <Badge sx={{'& .MuiBadge-badge':{backgroundColor: isOnline ? '#44b700' : '#d32f2f',
     color: isOnline ? '#44b700' : '#d32f2f'}}} variant="dot" overlap="circular"  anchorOrigin={{ horizontal:"right",vertical:"bottom"}}>
                 
-                    <Avatar  sx={{width:45,height:45}} src={image} ></Avatar>
+                    <Avatar  sx={{width:45,height:45}} src={pic} ></Avatar>
                 
             </Badge>
             </ListItemAvatar>

@@ -199,14 +199,20 @@ const roomsSlice = createSlice({
         },
 
         newMessage(state,action){
-
-            let roomIndex = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
-            state.rooms[roomIndex].messages = [...state.rooms[roomIndex].messages,action.payload]
-            if(state.currentRoom.roomId === action.payload.roomId){
+            console.log(action.payload);
+            if(action.payload.roomType === "public"){
                 state.currentRoom.messages = [...state.currentRoom.messages,action.payload];
             }
-            if(state.currentRoom.roomId !== action.payload.roomId){
-                state.rooms[roomIndex].newMessage = true;
+            
+            if(action.payload.roomType === "private"){
+                let roomIndex = state.rooms.findIndex(room => room.roomId === action.payload.roomId);
+                state.rooms[roomIndex].messages = [...state.rooms[roomIndex].messages,action.payload]
+                if(state.currentRoom.roomId === action.payload.roomId){
+                    state.currentRoom.messages = [...state.currentRoom.messages,action.payload];
+                }
+                if(state.currentRoom.roomId !== action.payload.roomId){
+                    state.rooms[roomIndex].newMessage = true;
+                }
             }
         },
 
@@ -227,15 +233,26 @@ const roomsSlice = createSlice({
             state.currentRoom = {roomId:action.payload.roomId,roomName:action.payload.roomName,users:action.payload.users,events:[],messages:[],image:'',type:"public"}
         },
 
+        updatePublicUsers(state,action){
+            state.currentRoom.users = action.payload;
+        },
+
         setPublicRoomData(state,action){
-            console.log(action.payload)
             state.publicRoomData.prevRoomId = state.publicRoomData.curRoomId;
             state.publicRoomData.curRoomId = action.payload.roomId;
             state.publicRoomData.prevRoomName = state.publicRoomData.curRoomName;
             state.publicRoomData.curRoomName = action.payload.roomName;
+        },
+
+        updatePublicUsersById(state,action){
+            state.currentRoom.users = state.currentRoom.users.filter(user => user.userId !== action.payload);
+        },
+
+        addMoreMessages(state,action){
+            state.currentRoom.messages = state.currentRoom.messages.concat(action.payload);
+            let roomIndex = state.rooms.findIndex(room => room.roomId === state.currentRoom.roomId);
+            state.rooms[roomIndex].messages = state.currentRoom.messages;
         }
-
-
 
     }
 })

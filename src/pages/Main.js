@@ -61,14 +61,14 @@ export default function Main(){
 
        
     return(
-        <Grid component={motion.div} container item xs={12} className={classes.root} sx={{height:'100vh'}} >
-            <Grid item lg={2} md={3} xs={12} className={classes.rooms}  >    
+        <Grid component={motion.div} container item  className={classes.root} sx={{height:'100vh'}} >
+            <Grid item lg={2} md={4} xs={12} className={classes.rooms}  >    
                 <Rooms isCurrentRoomAdmin={isRoomAdmin} />
             </Grid>
-            <Grid className={classes.chat} item lg={8} md={3} xs={12} sx={{bgcolor:blueGrey[600],borderRight:2,borderRightColor:blueGrey[500],borderLeft:2,borderLeftColor:blueGrey[500]}}>
+            <Grid className={classes.chat} item lg={8} md={4} xs={12} sx={{bgcolor:blueGrey[600],borderRight:2,borderRightColor:blueGrey[500],borderLeft:2,borderLeftColor:blueGrey[500]}}>
                  <ChatWindow isCurrentRoomAdmin={isRoomAdmin} /> 
             </Grid>
-            <Grid item lg={2} md={3} xs={12} sx={{bgcolor:blueGrey[900]}} className={classes.events}>
+            <Grid item lg={2} md={4} xs={12} sx={{bgcolor:blueGrey[900]}} className={classes.events}>
                 <Members isCurrentRoomAdmin={isRoomAdmin} /> 
                 <Events isCurrentRoomAdmin={isRoomAdmin} />
             </Grid>
