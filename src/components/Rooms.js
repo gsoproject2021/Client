@@ -1,7 +1,7 @@
 import { Edit,Add, DeleteForever } from "@mui/icons-material";
 import {Box, Divider, Typography,List,  IconButton} from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useState,useEffect, } from "react";
+import { useState,useEffect, useContext, } from "react";
 import {motion} from 'framer-motion/dist/framer-motion';
 
 import {cyan,teal,blueGrey,red,pink,purple,deepOrange,deepPurple,indigo,blue,lightBlue,green,lightGreen,lime,yellow,amber,orange,brown} from '@mui/material/colors';
@@ -14,6 +14,7 @@ import { fetchRoomsData,deleteRoom } from "../store/rooms-actions";
 
 
 import PublicRoom from "./PublicRoom";
+import { SocketContext } from "../context/SocketContext";
 
 
 const useStyles = makeStyles({
@@ -60,9 +61,10 @@ export default function Rooms({isCurrentRoomAdmin}){
     const classes = useStyles();
     const [addRoom,setAddRoom] = useState(false);
     const [editRoom,setEditRoom] = useState(false);
-    
+    const socket = useContext(SocketContext);
     
     const removeRoom = ()=>{
+        socket.emit('roomDeleted',current.roomId);
         dispatch(deleteRoom(current.roomId,current.users,user.token)); 
     }
     
@@ -102,7 +104,7 @@ export default function Rooms({isCurrentRoomAdmin}){
                 <Typography sx={{color:blueGrey[100]}} variant="h5" gutterBottom >Rooms</Typography>
                 <Box >
                 
-                    {!user.data.isAdvertiser?<Box  component={motion.div} 
+                    <Box  component={motion.div} 
                         variants={containerVariants}
                         initial='hidden' 
                         animate='visible' 
@@ -116,7 +118,7 @@ export default function Rooms({isCurrentRoomAdmin}){
                             <IconButton component={motion.div} whileHover={{scale:1.5}} sx={{color:blueGrey[100]}} onClick={removeRoom} >
                                 <DeleteForever/>
                             </IconButton></> : null}
-                    </Box>:null}
+                    </Box>
                 
                 
                 </Box>

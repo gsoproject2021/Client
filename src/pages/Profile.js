@@ -37,7 +37,7 @@ export default function Profile({userDetails}){
         },
         validationSchema: schema,
         onSubmit: data => {
-            console.log(JSON.stringify(data));
+            console.log(data);
             dispatch(updateUser(data,token))
         },
         

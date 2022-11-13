@@ -1,7 +1,6 @@
-import { Card,CardContent,Box,Typography, Avatar,ListItem} from "@mui/material"
+import { Card,CardContent,Box,Typography,ListItem} from "@mui/material"
 import { teal,cyan,grey,blueGrey} from "@mui/material/colors"
 import { makeStyles } from "@mui/styles"
-import { useState } from "react"
 
 import { useSelector } from "react-redux"
 
@@ -35,7 +34,7 @@ export default function Message({sender,message,senderId,time,messageId}) {
             <Card sx={{px:2,
                   mx:2,
                   mt:2,
-                  width:"60%",
+                  width:"50%",
                   bgcolor: myId===senderId ? teal['A700'] : blueGrey['300'],
                   color:'black',
                   }} >

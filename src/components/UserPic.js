@@ -43,7 +43,7 @@ export default function UserPic(){
                     </IconButton>
                     
                 }>
-                <Avatar  src={pic}  sx={{width:135,height:135,my:2}} />
+                <Avatar alt={user.data.firstName} src={pic}  sx={{width:135,height:135,my:2}} />
                     
                     
             </Badge>

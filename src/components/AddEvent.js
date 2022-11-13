@@ -20,7 +20,7 @@ export default function AddEvent({addEvent,dialogState}){
     const [subject,setSubject] = useState('');
     const [date,setDate] = useState('');
     const [description,setDescription] = useState('');
-
+    
     /*
     * function that close the dialog
     */
@@ -60,13 +60,12 @@ export default function AddEvent({addEvent,dialogState}){
                     <TextField placeholder="Subject" type="text" variant="filled" onChange = {(event => setSubject(event.target.value))} />
                     <TextField sx={{mx:1}}  type="datetime-local" variant="filled" onChange = {(event => setDate(event.target.value))} />
                     <TextField placeholder="Description" type="text" variant="filled" onChange = {(event) => setDescription(event.target.value)} />
-                </Box>
-                    
+                </Box>    
                 <Box >
                     <Button sx={{bgcolor:'success.light', color:'white',mt:2,mx:1}} onClick={addNewEvent} >Add</Button>
                     <Button onClick={handleCancel} sx={{bgcolor:'error.light',color:'white',mt:2}} >Cancel</Button>
                 </Box>
                 </DialogContent>
-            </Dialog>
+        </Dialog>
     );
 }

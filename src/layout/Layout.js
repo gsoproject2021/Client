@@ -91,7 +91,13 @@ export default function Layout(){
 
          socket.on(`userChannel-${user.data.userId}`, data => {
             dispatch(roomsActions.addUser(data));
-         })  
+         })
+         
+         socket.on(`roomCreatedByUser-${user.data.userId}`,data => {
+            console.log(data);
+            let roomData = data;
+            socket.emit('joinToNewRoom',roomData)
+         })
          
          socket.on("deleteRoom",data => {
             
@@ -128,15 +134,12 @@ export default function Layout(){
     },[socket,dispatch,user])
     
     useEffect(() => {
-        
         socket.connect();
         socket.emit("userRooms", rooms);  
         // socket.emit("getPublicRoom",{type:"public",publicRoomData});     
     })
 
-    // useEffect(() => {
-    //     socket.emit("getPublicRoom",{type:"public",publicRoomData});
-    // })
+    
     
 
     return(

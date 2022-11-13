@@ -6,10 +6,12 @@ const userSlice = createSlice({
     initialState:{data:{},token:'',expireIn:0,message:""},
     reducers:{
         setUser(state,action){
+            
             state.data = action.payload.data;
             state.token = action.payload.token;
             state.expireIn = action.payload.expireIn;
             localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token,expireIn:state.expireIn}));
+            
             
         },
         logout(state,action){
@@ -24,8 +26,9 @@ const userSlice = createSlice({
             state.data.image = action.payload;
         },
         updateUser(state,action){
-            state.data = action.payload;
-            localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token}));
+            state.data = action.payload.data;
+            state.expireIn = action.payload.expireIn;
+            localStorage.setItem('data',JSON.stringify({data:state.data,token:state.token,expireIn:state.expireIn}));
         },
         setMessage(state,action){
             state.message = action.payload;

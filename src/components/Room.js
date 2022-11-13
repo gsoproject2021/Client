@@ -46,8 +46,8 @@ export default function Room({roomName,roomId,image,backgroundColor,newMessage})
                 <ListItemButton sx={{bgcolor:blueGrey[900]}} onClick ={handleClick} selected={isSelected===currentRoom.roomId} >
                     <ListItemIcon>
                         <IconButton onClick={() => setAddDialog(true)}>
-                            <Avatar src={pic} sx={{  width:40, height:40, }}>
-                                {roomName[0]}
+                            <Avatar alt={roomName} src={pic} sx={{  width:40, height:40, }}>
+                               
                             </Avatar>
                         </IconButton>
                         <AddPicture dialogState={handleDialog} open={addDialog} type="room" roomId={roomId} />

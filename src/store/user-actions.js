@@ -85,14 +85,14 @@ export const updateUser = (userData,token) => {
                                                 {headers:{Authorization:`Bearer ${token}`}});
             if(!response){
                 dispatch(userActions.setMessage("something went wrong can't update user"));
-                throw new Error("something went wrong cant update user")
+                
             }
             const data = response.data;
             return data;
         }
         try{
         const data = await update();
-        console.log(data)
+          
         if(typeof data === 'string'){
             dispatch(userActions.setMessage(data));
         }
@@ -123,9 +123,9 @@ export const uploadPicture = (token,picture) => {
         }
         try{
             const data = await upload();
-            const user = {data,token};
-            console.log(data);
-            const temp = {};
+            const userData = JSON.parse(localStorage.getItem('data'));
+            const expireIn = userData.expireIn
+            const user = {data,token,expireIn};
             
             dispatch(userActions.setUser(user));
         }catch(err){
@@ -196,7 +196,7 @@ export const contactUs = (data) => {
 
     }
 }
-
+// sending request when forgot password with user email
 export const forgotPassword = (data) => {
     let {email} = data;
     return async (dispatch) => {

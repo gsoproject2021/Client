@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ListItemButton,Avatar,ListItemText, ListItemAvatar, IconButton,Box,  Badge} from "@mui/material";
-import { BookmarkAdd, Clear } from "@mui/icons-material";
+import {  Clear } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUserFromRoom } from "../store/cache-actions";
 
@@ -36,7 +36,7 @@ export default function User({firstName,userId,isAdmin,image,isOnline,isRoomAdmi
             <Badge sx={{'& .MuiBadge-badge':{backgroundColor: isOnline ? '#44b700' : '#d32f2f',
     color: isOnline ? '#44b700' : '#d32f2f'}}} variant="dot" overlap="circular"  anchorOrigin={{ horizontal:"right",vertical:"bottom"}}>
                 
-                    <Avatar  sx={{width:45,height:45}} src={pic} ></Avatar>
+                    <Avatar src={pic} alt={firstName} sx={{width:45,height:45}} />
                 
             </Badge>
             </ListItemAvatar>
